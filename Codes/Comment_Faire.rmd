@@ -1,5 +1,5 @@
 
-Dans cet onglet, on peut partager les codes qu'on a écrit.
+Dans ce dossier "Codes", on peut partager les codes qu'on a écrit.
 
 Pour modifier un code: cliquer dessus puis cliquer sur edit (le petit crayon en haut à droite); 
 ensuite, après l'avoir modifié, aller tout en bas et cliquer sur "commit changes"
