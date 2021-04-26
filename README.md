@@ -2,7 +2,7 @@
 
 Econometric methods final project (Chloé, Rachel and Louis).
 
-=> Voir le fichier "ReadME" dans le dossier "Codes" pour comprendre comment 
+=> Voir le fichier "Comment_Faire.rmd" dans le dossier "Codes" pour comprendre comment 
    modifier ou créer un code.
    
    
