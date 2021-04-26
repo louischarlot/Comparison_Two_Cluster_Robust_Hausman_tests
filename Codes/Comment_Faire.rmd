@@ -5,7 +5,7 @@ Pour modifier un code: cliquer dessus puis cliquer sur edit (le petit crayon en 
 ensuite, après l'avoir modifié, aller tout en bas et cliquer sur "commit changes"
 
 
-Pour créer un nouveau code: cliquer sur "Add Files" (tout en hau à droite), puis "Create New file" et 
+Pour créer un nouveau code: cliquer sur "Add Files" (tout en haut à droite), puis "Create New file" et 
 nommer le code "nom_du_code.R" pour que l'ordi sache que c'est un fichier R, et enfin aller tout en bas et 
 cliquer sur "commit changes".
 
