@@ -1,0 +1,4 @@
+
+Dans cet onglet, on peut partager les codes qu'on a écrit.
+
+Pour modifier un code: cliquer dessus puis cliquer sur edit; ensuite, après l'avoir modifié, allez tout en bas et cliquer 
