@@ -1,2 +1,3 @@
-# APE_Econometric_Methods_Project
+# APE Econometric Methods Project
+
 Econometric methods final project (Chloé, Rachel and Louis).
