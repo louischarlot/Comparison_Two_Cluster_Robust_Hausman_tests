@@ -1,4 +1,7 @@
 
 Dans cet onglet, on peut partager les codes qu'on a écrit.
 
-Pour modifier un code: cliquer dessus puis cliquer sur edit; ensuite, après l'avoir modifié, allez tout en bas et cliquer 
+Pour modifier un code: cliquer dessus puis cliquer sur edit (le petit crayon en haut à droite); ensuite, après l'avoir modifié, allez tout en bas et cliquer sur "commit new changes"
+
+
+Pour créer un nouveau code: 
