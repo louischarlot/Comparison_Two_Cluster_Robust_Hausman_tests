@@ -1,10 +1,14 @@
 # Dans ce code R, on va essayer de reproduire la 1ère méthode, expliquée pour Stata
-# dans "Microeconometrics Using Stata" (2009) à la page 261.
+# dans 
 
 
 
-# CODE STATA : Robust Hausman test using method of Wooldridge (2002)
-# 
+#####################################################################################################################################
+# 2 INSPIRATIONS SUR STATA ##########################################################################################################
+#####################################################################################################################################
+
+# CODE STATA: POSSIBILITÉ 1: "Microeconometrics Using Stata" (2009) à la page 261 ###################################################
+# Robust Hausman test using method of Wooldridge (2002)
 # quietly xtreg lwage $xlist, re
 # scalar theta = e(theta)
 # global yandxforhausman lwage exp exp2 wks
@@ -21,6 +25,33 @@
 # ( 3) mdwks = 0
 # F( 3, 4158) 848.39
 # Prob > F = 0 . 0000
+
+
+# CODE STATA: POSSIBILITÉ 2: CODE DE Zachariah Rutledge: voir fichier "Code_methode_1_Zachariah_Rutledge.do" ######################
+
+
+
+
+
+#####################################################################################################################################
+# TENTATIVE DE CODE R ###############################################################################################################
+#####################################################################################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
