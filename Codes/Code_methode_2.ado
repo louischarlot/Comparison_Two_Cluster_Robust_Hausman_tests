@@ -1,3 +1,7 @@
+/* ICI SE TROUVE LE CODE SOURCE POUR LA 2nde METHODE (STATA)
+*/
+
+
 /* change log
 2015-04-24: extraction of cluster variable from models fixed.
 - more robust treatment of unidentified covariates
