@@ -63,7 +63,7 @@ getAnywhere(UseMethod)
 
 
 
-# Function written in R is:
+# Function of package "plm" is:
 
 phtest.formula <- function(x, data, model = c("within", "random"),
                            method = c("chisq", "aux"),
