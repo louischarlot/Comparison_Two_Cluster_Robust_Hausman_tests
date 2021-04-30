@@ -63,7 +63,8 @@ getAnywhere(UseMethod)
 
 
 
-# Function of package "plm" is:
+
+# Simplified function of package "plm" is:  ######################################################################
 
 phtest.formula <- function(x, data, model = c("within", "random"),
                            method = c("chisq", "aux"),
@@ -86,6 +87,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
            plm.model.2 <- update(plm.model.1, model = model[2])
            return(phtest(plm.model.1, plm.model.2))
          },
+         ################################################## AUX = OPTION ISSUE DE WOODRIDGE (2010) !!!!!!!!
          aux={
            ## some interface checks here
            if (model[1] != "within") {
