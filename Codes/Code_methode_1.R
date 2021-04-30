@@ -38,6 +38,9 @@ wi <- plm(form, data = Gasoline, model = "within")
 # Random effects:
 re <- plm(form, data = Gasoline, model = "random") 
 
+# Details of the function:
+help(phtest)
+
 # Classical Hausman test:
 phtest(wi, re)
 phtest(form, data = Gasoline)
