@@ -4,30 +4,13 @@
 
 
 #####################################################################################################################################
-# 2 INSPIRATIONS SUR STATA ##########################################################################################################
+# INSPIRATIONS SUR STATA ? ##########################################################################################################
 #####################################################################################################################################
 
-# CODE STATA: POSSIBILITÉ 1: "Microeconometrics Using Stata" (2009) à la page 261 ###################################################
-# Robust Hausman test using method of Wooldridge (2002)
-# quietly xtreg lwage $xlist, re
-# scalar theta = e(theta)
-# global yandxforhausman lwage exp exp2 wks
-# sort id
-# foreach x of varlist $yandxforhausman {
-#     by id : egen mean "x" = mean("x")
-#     generate md "x" = "x" - mean "x"
-#     generate red "x" = "x" - theta * mean "x"
-#     }
-# quietly regress redlwage redexp redexp2 redwks mdexp mdexp2 mdwks
-# test mdexp mdexp2 mdwks
-# ( 1) mdexp = 0
-# ( 2) mdexp2 = 0
-# ( 3) mdwks = 0
-# F( 3, 4158) 848.39
-# Prob > F = 0 . 0000
+# POSSIBILITÉ 1: "Microeconometrics Using Stata" (2009) à la page 261 ###################################################
 
 
-# CODE STATA: POSSIBILITÉ 2: CODE DE Zachariah Rutledge: voir fichier "Code_methode_1_Zachariah_Rutledge.do" ######################
+# POSSIBILITÉ 2: CODE DE Zachariah Rutledge: voir fichier "Code_methode_1_Zachariah_Rutledge.do" ######################
 
 
 
@@ -40,8 +23,35 @@
 # plus récente (donc possiblement améliorée/corrigée par rapport à celle de 2002), il serait peut-être mieux d'essayer d'implémenter 
 # celle ci.
 
+# There is a function of the package "plm" that has been developed to calculate the "cluster-robust Hausman test" of (Wooldridge, 2010):
 
 
+#install.packages("plm")
+library (plm)
+
+# Load the data:
+data("Gasoline", package = "plm")
+form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
+
+# Fixed effects:
+wi <- plm(form, data = Gasoline, model = "within") 
+# Random effects:
+re <- plm(form, data = Gasoline, model = "random") 
+
+# Classical Hausman test:
+phtest(wi, re)
+phtest(form, data = Gasoline)
+
+
+# Robust Hausman Tests:
+
+phtest(form, data = Gasoline, method = "aux")
+# robust Hausman test (regression-based)
+phtest(form, data = Gasoline, method = "aux", vcov = vcovHC)
+# robust Hausman test with vcov supplied as a
+# function and additional parameters
+phtest(form, data = Gasoline, method = "aux",
+       vcov = function(x) vcovHC(x, method="white2", type="HC3"))
 
 
 
