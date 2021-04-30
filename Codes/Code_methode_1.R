@@ -43,7 +43,7 @@ phtest(wi, re)
 phtest(form, data = Gasoline)
 
 
-# Robust Hausman Tests:
+# Robust Hausman Tests: comprendre les détails !!!!!!!!!!!!
 
 phtest(form, data = Gasoline, method = "aux")
 # robust Hausman test (regression-based)
