@@ -31,6 +31,7 @@ library (plm)
 
 # Load the data:
 data("Gasoline", package = "plm")
+data = Gasoline
 form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
 
 # Fixed effects:
@@ -110,12 +111,10 @@ phtest.formula <- function(x, data, model = c("within", "random"),
            if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
            
            # calculatate FE and RE model ###################################################################################################
-           fe_mod <- plm(formula = x, data = data, model = model[1], effect = effect)
-           re_mod <- plm(formula = x, data = data, model = model[2], effect = effect)
+           fe_mod <- plm(formula = x, data = data, model = "within", effect = effect)
+           re_mod <- plm(formula = x, data = data, model = "random", effect = effect)
            
            reY <- pmodel.response(re_mod)
-           #               reX <- model.matrix(re_mod)[ , -1, drop = FALSE] # intercept not needed; drop=F needed to prevent matrix
-           #               feX <- model.matrix(fe_mod, cstcovar.rm = TRUE)                      # from degenerating to vector if only one regressor
            reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
            feX <- model.matrix(fe_mod, cstcovar.rm = "all")
            
@@ -171,8 +170,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
            haus2 <- list(statistic   = h2t,
                          p.value     = ph2t,
                          parameter   = df,
-                         method      = paste("Regression-based Hausman test",
-                                             vcov, sep=""),
+                         method      = paste("Regression-based Hausman test", vcov, sep=""),
                          alternative = "one model is inconsistent",
                          data.name   = paste(deparse(substitute(x))))
            class(haus2) <- "htest"
