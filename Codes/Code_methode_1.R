@@ -217,32 +217,31 @@ reY <- pmodel.response(re_mod)
 reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
 feX <- model.matrix(fe_mod, cstcovar.rm = "all")
 
-
 # We add ".tilde" at the dimension names of the feX: => VOIR MIEUX POURQUOI ON RENOMME AINSI !!!
 dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]], "tilde", sep=".")
 
-
-
-
-
-
-
-
-
-
-
-
-
-## estimated models could have fewer obs (due dropping of NAs) compared to the original data
-## => match original data and observations used in estimated models
-## routine adapted from lmtest::bptest
-commonrownames <- intersect(intersect(intersect(row.names(data), names(reY)), row.names(reX)), row.names(feX))
-if (!(all(c(row.names(data) %in% commonrownames, commonrownames %in% row.names(data))))) {
+# We match the observations of the 2 models (RE and FE), given that the possible dropping of NAs:
+# estimated models could have fewer obs (due dropping of NAs) compared to the original data
+# => match original data and observations used in estimated models
+# (routine adapted from lmtest::bptest)
+commonrownames <- intersect(intersect(intersect(row.names(data), names(reY)), row.names(reX)), row.names(feX)) # Rows that are kept for all 3 reY, reX, feX 
+# If some rows have been dropped, we take only the rows that are present in all 3 reY, reX, feX: 
+if (!(all(c(row.names(data) %in% commonrownames, commonrownames %in% row.names(data))))) { 
   data <- data[commonrownames, ]
   reY  <- reY[commonrownames]
   reX  <- reX[commonrownames, ]
   feX  <- feX[commonrownames, ]
 }
+
+
+
+
+
+
+
+
+
+
 
 # Tests of correct matching of obs (just for safety ...)
 if (!all.equal(length(reY), nrow(data), nrow(reX), nrow(feX)))
