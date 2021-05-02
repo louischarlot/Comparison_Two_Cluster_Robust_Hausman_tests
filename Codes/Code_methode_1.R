@@ -204,8 +204,14 @@ re_mod <- plm(formula = x, data = data, model = "random", effect = effect)
 # with the specified transformation (random effects transformation ("quasi demeaning")) applied to it:
 reY <- pmodel.response(re_mod)
 
+# Construct the  design matrix (or model matrix):
+# When we have a mode written as "Y=Xβ+ε", the design matrix (or model matrix) is the matrix X.(I THINK => CHECK BETTER !!!)
+# => see https://genomicsclass.github.io/book/pages/expressing_design_formula.html
+# "cstcovar.rm": remove the constant columns, one of "none", "intercept", "covariates", "all"),
 reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
 feX <- model.matrix(fe_mod, cstcovar.rm = "all")
+
+
 
 
 
