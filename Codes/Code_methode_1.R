@@ -232,24 +232,25 @@ if (!(all(c(row.names(data) %in% commonrownames, commonrownames %in% row.names(d
   reX  <- reX[commonrownames, ]
   feX  <- feX[commonrownames, ]
 }
-
-
-
-
-
-
-
-
-
-
-
-# Tests of correct matching of obs (just for safety ...)
+# Tests of correct matching of observations (just for safety ...):
 if (!all.equal(length(reY), nrow(data), nrow(reX), nrow(feX)))
   stop("number of cases/observations do not match, most likely due to NAs in \"data\"")
 if (any(c(is.na(names(reY)), is.na(row.names(data)), is.na(row.names(reX)), is.na(row.names(feX)))))
   stop("one (or more) rowname(s) is (are) NA")
 if (!all.equal(names(reY), row.names(data), row.names(reX), row.names(feX)))
   stop("row.names of cases/observations do not match, most likely due to NAs in \"data\"")
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## fetch indices here, check pdata
 ## construct data set and formula for auxiliary regression
