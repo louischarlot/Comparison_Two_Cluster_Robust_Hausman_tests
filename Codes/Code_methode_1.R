@@ -191,15 +191,17 @@ phtest.formula <- function(x, data, model = c("within", "random"),
 x = form
 data = Gasoline
 model = c("within", "random")
+# "effect":	the effects introduced in the model, one of "individual", "time", "twoways", or "nested":
+effect = "twoways" # PAS SÛR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-
-# calculate FE and RE model 
+# Calculate FE and RE model: 
 fe_mod <- plm(formula = x, data = data, model = "within", effect = effect)
 re_mod <- plm(formula = x, data = data, model = "random", effect = effect)
 
-
+# Construct (transformed) response of the RE model:
 reY <- pmodel.response(re_mod)
+
 reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
 feX <- model.matrix(fe_mod, cstcovar.rm = "all")
 
