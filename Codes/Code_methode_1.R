@@ -110,7 +110,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
            
            if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
            
-           # calculatate FE and RE model ###################################################################################################
+           # calculate FE and RE model ###################################################################################################
            fe_mod <- plm(formula = x, data = data, model = "within", effect = effect)
            re_mod <- plm(formula = x, data = data, model = "random", effect = effect)
            
@@ -191,6 +191,9 @@ phtest.formula <- function(x, data, model = c("within", "random"),
 
 
 
+# calculate FE and RE model 
+fe_mod <- plm(formula = x, data = data, model = "within", effect = effect)
+re_mod <- plm(formula = x, data = data, model = "random", effect = effect)
 
 
 
