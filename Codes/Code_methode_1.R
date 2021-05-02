@@ -201,6 +201,7 @@ model = c("within", "random")
 effect = "twoways" # PAS SÛR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
+
 # Calculate FE and RE model: 
 fe_mod <- plm(formula = x, data = data, model = "within", effect = effect)
 re_mod <- plm(formula = x, data = data, model = "random", effect = effect)
@@ -241,26 +242,29 @@ if (!all.equal(names(reY), row.names(data), row.names(reX), row.names(feX)))
   stop("row.names of cases/observations do not match, most likely due to NAs in \"data\"")
 
 
+### We construct now data set and formula for auxiliary regression:
 
-
-
-
-
-
-
-
-
-
-
-## fetch indices here, check pdata
-## construct data set and formula for auxiliary regression
+# An object of class 'pdata.frame' is a data.frame with an index attribute that describes its individual and time dimensions. => VOIR MIEUX !!!
 data <- pdata.frame(cbind(index(data), reY, reX, feX))
+
+# We write the equation for the auxiliary regression, following WOOLDRIDGE (2010)
 auxfm <- as.formula(paste("reY~",
                           paste(dimnames(reX)[[2]],
                                 collapse="+"), "+",
                           paste(dimnames(feX)[[2]],
                                 collapse="+"), sep=""))
+# We then run the corresponding pooled regression:
 auxmod <- plm(formula = auxfm, data = data, model = "pooling")
+
+
+
+
+
+
+
+
+
+
 nvars <- dim(feX)[[2]]
 R <- diag(1, nvars)
 r <- rep(0, nvars) # here just for clarity of illustration
