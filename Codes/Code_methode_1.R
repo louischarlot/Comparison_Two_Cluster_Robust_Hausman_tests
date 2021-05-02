@@ -31,7 +31,6 @@ library (plm)
 
 # Load the data:
 data("Gasoline", package = "plm")
-data = Gasoline
 form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
 
 # Fixed effects:
@@ -189,6 +188,10 @@ phtest.formula <- function(x, data, model = c("within", "random"),
 # TENTATIVE DE CODAGE SUR  R ########################################################################################################
 #####################################################################################################################################
 
+x = form
+data = Gasoline
+model = c("within", "random")
+
 
 
 # calculate FE and RE model 
@@ -196,6 +199,9 @@ fe_mod <- plm(formula = x, data = data, model = "within", effect = effect)
 re_mod <- plm(formula = x, data = data, model = "random", effect = effect)
 
 
+reY <- pmodel.response(re_mod)
+reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
+feX <- model.matrix(fe_mod, cstcovar.rm = "all")
 
 
 
