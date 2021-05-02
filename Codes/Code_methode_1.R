@@ -245,7 +245,7 @@ if (!all.equal(names(reY), row.names(data), row.names(reX), row.names(feX)))
 ### We construct now data set and formula for auxiliary regression:
 
 # An object of class 'pdata.frame' is a data.frame with an index attribute that describes its individual and time dimensions. => VOIR MIEUX !!!
-data <- pdata.frame(cbind(index(data), reY, reX, feX))
+data_2 <- pdata.frame(cbind(index(data), reY, reX, feX))
 
 # We write the equation for the auxiliary regression, following WOOLDRIDGE (2010)
 auxfm <- as.formula(paste("reY~",
@@ -253,8 +253,12 @@ auxfm <- as.formula(paste("reY~",
                                 collapse="+"), "+",
                           paste(dimnames(feX)[[2]],
                                 collapse="+"), sep=""))
+
 # We then run the corresponding pooled regression:
-auxmod <- plm(formula = auxfm, data = data, model = "pooling")
+# auxmod <- plm(formula = auxfm, data = data_1, model = "pooling") => ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# => BECAUSE OF THIS ERROR, WE RUN THE EQUIVALENT OLS REGRESSION => CHECK THAT IT IS EQUIALENT !!!!!!!!!!!!!
+# plm(formula = x, data = data, model = "pooling") <=> lm(formula = x, data = data) => IN OTHER WORDS, CHECK IF THIS IS ALWAYS TRUE !!!!!!!
+auxmod <- lm(formula = auxfm, data = data_1)
 
 
 
@@ -263,8 +267,7 @@ auxmod <- plm(formula = auxfm, data = data, model = "pooling")
 
 
 
-
-
+# Number 
 nvars <- dim(feX)[[2]]
 R <- diag(1, nvars)
 r <- rep(0, nvars) # here just for clarity of illustration
