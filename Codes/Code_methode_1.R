@@ -83,6 +83,7 @@ gigi <- function(x, data, model = c("within", "random"),
   #    If introduced as argument, change doc accordingly (currently, effect arg is mentioned in ...)
   
   ## some interface checks here
+  
            if (model[1] != "within") {
              stop("Please supply 'within' as first model type")
            }
@@ -135,6 +136,10 @@ gigi <- function(x, data, model = c("within", "random"),
            if (!all.equal(names(reY), row.names(data), row.names(reX), row.names(feX)))
              stop("row.names of cases/observations do not match, most likely due to NAs in \"data\"")
            
+           
+           
+           
+           
            ## fetch indices here, check pdata
            ## construct data set and formula for auxiliary regression
            data <- pdata.frame(cbind(index(data), reY, reX, feX))
@@ -144,6 +149,13 @@ gigi <- function(x, data, model = c("within", "random"),
                                      paste(dimnames(feX)[[2]],
                                            collapse="+"), sep=""))
            auxmod <- plm(formula = auxfm, data = data, model = "pooling")
+           
+           
+           
+           
+           
+           
+           
            nvars <- dim(feX)[[2]]
            R <- diag(1, nvars)
            r <- rep(0, nvars) # here just for clarity of illustration
@@ -288,8 +300,10 @@ x = form
 data = Gasoline
 model = c("within", "random")
 # "effect":	the effects introduced in the model, one of "individual", "time", "twoways", or "nested":
-effect = "twoways" or NULL ??? # PAS SÛR => ou RIEN ????? => DANS CE CAS FCT LUI DONNE VALEUR NULL !!!!!!!!!!!!!!!!!!!!!!!!!!!
-vcov = vcovHC # PAS SÛR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# effect = "twoways" or NULL ??? # PAS SÛR => ou RIEN ????? => DANS CE CAS FCT LUI DONNE VALEUR NULL !!!!!!!!!!!!!!!!!!!!!!!!!!!
+#vcov = vcovHC # PAS SÛR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+vcov = NULL
+index = NULL
 
 
 
@@ -349,24 +363,8 @@ auxfm <- as.formula(paste("reY~",
                           paste(dimnames(feX)[[2]],
                                 collapse="+"), sep=""))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 # We then run the corresponding pooled regression:
 auxmod <- plm(formula = auxfm, data = data_2, model = "pooling") # => ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# => BECAUSE OF THIS ERROR, WE RUN THE EQUIVALENT OLS REGRESSION => CHECK THAT IT IS EQUIALENT !!!!!!!!!!!!!
-# plm(formula = x, data = data, model = "pooling") <=> lm(formula = x, data = data) => IN OTHER WORDS, CHECK IF THIS IS ALWAYS TRUE !!!!!!!
-auxmod <- lm(formula = auxfm, data = data_2)
 
 # Number of variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde)
 nvars <- dim(feX)[[2]]
@@ -374,6 +372,9 @@ nvars <- dim(feX)[[2]]
 R <- diag(1, nvars)
 # Vector of zeros of dimension = nvars
 r <- rep(0, nvars) # here just for clarity of illustration
+
+
+
 
 
 
