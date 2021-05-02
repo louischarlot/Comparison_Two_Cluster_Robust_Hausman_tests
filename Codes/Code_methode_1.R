@@ -379,16 +379,6 @@ r <- rep(0, nvars) # here just for clarity of illustration
 
 
 
-
-
-
-
-
-
-
-
-
-
 omega0 <- vcov(auxmod)[(nvars+2):(nvars*2+1),
                        (nvars+2):(nvars*2+1)]
 Rbr <- R %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - r
@@ -413,7 +403,16 @@ haus2 <- list(statistic   = h2t,
               alternative = "one model is inconsistent",
               data.name   = paste(deparse(substitute(x))))
 class(haus2) <- "htest"
-return(haus2)
+
+haus2
+
+
+
+
+
+
+
+
 
 
 
