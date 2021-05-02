@@ -260,17 +260,20 @@ auxfm <- as.formula(paste("reY~",
 # plm(formula = x, data = data, model = "pooling") <=> lm(formula = x, data = data) => IN OTHER WORDS, CHECK IF THIS IS ALWAYS TRUE !!!!!!!
 auxmod <- lm(formula = auxfm, data = data_1)
 
-
-
-
-
-
-
-
-# Number 
+# Number of variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde)
 nvars <- dim(feX)[[2]]
+# Identity matrix of dimension = (nvars x nvars)
 R <- diag(1, nvars)
+# Vector of zeros of dimension = nvars
 r <- rep(0, nvars) # here just for clarity of illustration
+
+
+
+
+
+
+
+
 omega0 <- vcov(auxmod)[(nvars+2):(nvars*2+1),
                        (nvars+2):(nvars*2+1)]
 Rbr <- R %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - r
