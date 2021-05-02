@@ -366,21 +366,22 @@ auxfm <- as.formula(paste("reY~",
 # We then run the corresponding pooled regression:
 auxmod <- plm(formula = auxfm, data = data_2, model = "pooling") # => ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-# Number of variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde)
+# Number of "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde)
 nvars <- dim(feX)[[2]]
 # Identity matrix of dimension = (nvars x nvars)
 R <- diag(1, nvars)
 # Vector of zeros of dimension = nvars
 r <- rep(0, nvars) # here just for clarity of illustration
-
-
-
-
-
-
-
+# Covariance matrix for the auxiliary regression for the "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde):
 omega0 <- vcov(auxmod)[(nvars+2):(nvars*2+1),
                        (nvars+2):(nvars*2+1)]
+
+
+
+
+
+
+
 Rbr <- R %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - r
 
 h2t <- as.numeric(crossprod(Rbr, solve(omega0, Rbr)))
