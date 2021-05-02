@@ -63,38 +63,26 @@ getAnywhere(phtest.formula)
 
 
 
+gigi(x=form, data = Gasoline, model = c("within", "random"))
 
-phtest.formula()
+x=form
+data = Gasoline
+model = c("within", "random")
+
 
 
 # Simplified function of package "plm" is:  ######################################################################
 
 
 ### VERSION OLD BUT COMMENTED:
-phtest.formula <- function(x, data, model = c("within", "random"),
-                           method = c("chisq", "aux"),
-                           index = NULL, vcov = NULL, ...) {
+gigi <- function(x, data, model = c("within", "random"),
+                           index = NULL, vcov = NULL) {
   # NB: No argument 'effect' here, maybe introduce?
   #     it gets evaluated due to the eval() call for method="chisq"
   #     and since rev. 305 due to extraction from dots (...) in method="aux" as a quick fix
   #    If introduced as argument, change doc accordingly (currently, effect arg is mentioned in ...)
   
-  
-  switch(match.arg(method),
-         chisq={
-           cl <- match.call(expand.dots = TRUE)
-           cl$model <- model[1]
-           names(cl)[2] <- "formula"
-           m <- match(plm.arg, names(cl), 0)
-           cl <- cl[c(1,m)]
-           cl[[1]] <- as.name("plm")
-           plm.model.1 <- eval(cl, parent.frame())
-           plm.model.2 <- update(plm.model.1, model = model[2])
-           return(phtest(plm.model.1, plm.model.2))
-         },
-         ################################################## AUX = OPTION ISSUE DE WOODRIDGE (2010) !!!!!!!!
-         aux={
-           ## some interface checks here
+  ## some interface checks here
            if (model[1] != "within") {
              stop("Please supply 'within' as first model type")
            }
@@ -110,18 +98,17 @@ phtest.formula <- function(x, data, model = c("within", "random"),
            
            # rev. 305: quick and dirty fix for missing effect argument in function 
            # signature for formula interface/test="aux": see if effect is in dots and extract
-           dots <- list(...)
            
-           if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
+           
+           
            
            # calculate FE and RE model ###################################################################################################
-           fe_mod <- plm(formula = x, data = data, model = "within", effect = effect)
-           re_mod <- plm(formula = x, data = data, model = "random", effect = effect)
+           fe_mod <- plm(formula = x, data = data, model = "within")
+           re_mod <- plm(formula = x, data = data, model = "random")
            
            reY <- pmodel.response(re_mod)
            reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
            feX <- model.matrix(fe_mod, cstcovar.rm = "all")
-           
            
            
            
@@ -185,7 +172,7 @@ phtest.formula <- function(x, data, model = c("within", "random"),
                          data.name   = paste(deparse(substitute(x))))
            class(haus2) <- "htest"
            return(haus2)
-         })
+         
 }
 
 
@@ -223,7 +210,17 @@ function (x, data, model = c("within", "random"), method = c("chisq",
                                                             index = index)
     row.names(data) <- NULL
     dots <- list(...)
+    
+    
+    
+    ####
+    dots <- list() # CAR IL N'Y A RIEN !!!!!
     if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
+    
+    
+    
+    
+    ###
     fe_mod <- plm(formula = x, data = data, model = model[1], 
                   effect = effect)
     re_mod <- plm(formula = x, data = data, model = model[2], 
@@ -291,10 +288,14 @@ x = form
 data = Gasoline
 model = c("within", "random")
 # "effect":	the effects introduced in the model, one of "individual", "time", "twoways", or "nested":
-effect = "twoways" # PAS SÛR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+effect = "twoways" or NULL ??? # PAS SÛR => ou RIEN ????? => DANS CE CAS FCT LUI DONNE VALEUR NULL !!!!!!!!!!!!!!!!!!!!!!!!!!!
 vcov = vcovHC # PAS SÛR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
+
+# If the data is not pdata.frame, transform it into a pdata.frame:
+# an object of class 'pdata.frame' is a data.frame with an index attribute that describes its individual and time dimensions.
+if (!inherits(data, "pdata.frame")) data <- pdata.frame(data, index = index) #, ...)
 
 # Calculate FE and RE model: 
 fe_mod <- plm(formula = x, data = data, model = "within", effect = effect)
@@ -362,7 +363,7 @@ auxfm <- as.formula(paste("reY~",
 
 
 # We then run the corresponding pooled regression:
-auxmod <- plm(formula = reY ~  lrpmg + lcarpcap + lincomep.tilde + lrpmg.tilde + lcarpcap.tilde, data = data_2, model = "pooling") # => ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+auxmod <- plm(formula = auxfm, data = data_2, model = "pooling") # => ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # => BECAUSE OF THIS ERROR, WE RUN THE EQUIVALENT OLS REGRESSION => CHECK THAT IT IS EQUIALENT !!!!!!!!!!!!!
 # plm(formula = x, data = data, model = "pooling") <=> lm(formula = x, data = data) => IN OTHER WORDS, CHECK IF THIS IS ALWAYS TRUE !!!!!!!
 auxmod <- lm(formula = auxfm, data = data_2)
