@@ -200,6 +200,8 @@ fe_mod <- plm(formula = x, data = data, model = "within", effect = effect)
 re_mod <- plm(formula = x, data = data, model = "random", effect = effect)
 
 # Construct (transformed) response of the RE model:
+# pmodel.response() gives you the response variable (in this case that would be y) but 
+# with the specified transformation (random effects transformation ("quasi demeaning")) applied to it:
 reY <- pmodel.response(re_mod)
 
 reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
