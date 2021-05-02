@@ -218,20 +218,20 @@ reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
 feX <- model.matrix(fe_mod, cstcovar.rm = "all")
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+# We add ".tilde" at the dimension names of the feX: => VOIR MIEUX POURQUOI ON RENOMME AINSI !!!
 dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]], "tilde", sep=".")
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## estimated models could have fewer obs (due dropping of NAs) compared to the original data
 ## => match original data and observations used in estimated models
