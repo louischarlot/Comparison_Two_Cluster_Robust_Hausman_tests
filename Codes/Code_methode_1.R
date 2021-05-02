@@ -48,24 +48,29 @@ phtest(form, data = Gasoline)
 
 # Robust Hausman Tests: comprendre les détails !!!!!!!!!!!!
 
-phtest(form, data = Gasoline, method = "aux")
+phtest(x=form, data = Gasoline, model = c("within", "random"), method = "aux")
 # robust Hausman test (regression-based)
-phtest(form, data = Gasoline, method = "aux", vcov = vcovHC)
+phtest(x=form, data = Gasoline, model = c("within", "random"), method = "aux", vcov = vcovHC)
 # robust Hausman test with vcov supplied as a
 # function and additional parameters
-phtest(form, data = Gasoline, method = "aux",
+phtest(x=form, data = Gasoline, model = c("within", "random"), method = "aux",
        vcov = function(x) vcovHC(x, method="white2", type="HC3"))
 
 # To see the source code of the function:
 getAnywhere(phtest)
-getAnywhere(UseMethod)
+methods(phtest)
+getAnywhere(phtest.formula)
 
 
 
+
+phtest.formula()
 
 
 # Simplified function of package "plm" is:  ######################################################################
 
+
+### VERSION OLD BUT COMMENTED:
 phtest.formula <- function(x, data, model = c("within", "random"),
                            method = c("chisq", "aux"),
                            index = NULL, vcov = NULL, ...) {
@@ -187,6 +192,94 @@ phtest.formula <- function(x, data, model = c("within", "random"),
 
 
 
+### VERSION MODERN:
+function (x, data, model = c("within", "random"), method = c("chisq", 
+                                                             "aux"), index = NULL, vcov = NULL, ...) 
+{
+  if (length(model) != 2) 
+    stop("two models should be indicated")
+  for (i in 1:2) {
+    model.name <- model[i]
+    if (!(model.name %in% names(model.plm.list))) {
+      stop("model must be one of ", oneof(model.plm.list))
+    }
+  }
+  switch(match.arg(method), chisq = {
+    cl <- match.call(expand.dots = TRUE)
+    cl$model <- model[1]
+    names(cl)[2] <- "formula"
+    m <- match(plm.arg, names(cl), 0)
+    cl <- cl[c(1, m)]
+    cl[[1]] <- as.name("plm")
+    plm.model.1 <- eval(cl, parent.frame())
+    plm.model.2 <- update(plm.model.1, model = model[2])
+    return(phtest(plm.model.1, plm.model.2))
+  }, aux = {
+    if (model[1] != "within") {
+      stop("Please supply 'within' as first model type")
+    }
+    if (!is.null(vcov) && !is.function(vcov)) stop("argument 'vcov' needs to be a function")
+    if (!inherits(data, "pdata.frame")) data <- pdata.frame(data, 
+                                                            index = index)
+    row.names(data) <- NULL
+    dots <- list(...)
+    if (!is.null(dots$effect)) effect <- dots$effect else effect <- NULL
+    fe_mod <- plm(formula = x, data = data, model = model[1], 
+                  effect = effect)
+    re_mod <- plm(formula = x, data = data, model = model[2], 
+                  effect = effect)
+    reY <- pmodel.response(re_mod)
+    reX <- model.matrix(re_mod, cstcovar.rm = "intercept")
+    feX <- model.matrix(fe_mod, cstcovar.rm = "all")
+    dimnames(feX)[[2]] <- paste(dimnames(feX)[[2]], "tilde", 
+                                sep = ".")
+    commonrownames <- intersect(intersect(intersect(row.names(data), 
+                                                    names(reY)), row.names(reX)), row.names(feX))
+    if (!(all(c(row.names(data) %in% commonrownames, commonrownames %in% 
+                row.names(data))))) {
+      data <- data[commonrownames, ]
+      reY <- reY[commonrownames]
+      reX <- reX[commonrownames, ]
+      feX <- feX[commonrownames, ]
+    }
+    if (!all.equal(length(reY), nrow(data), nrow(reX), nrow(feX))) stop("number of cases/observations do not match, most likely due to NAs in \"data\"")
+    if (any(c(is.na(names(reY)), is.na(row.names(data)), 
+              is.na(row.names(reX)), is.na(row.names(feX))))) stop("one (or more) rowname(s) is (are) NA")
+    if (!all.equal(names(reY), row.names(data), row.names(reX), 
+                   row.names(feX))) stop("row.names of cases/observations do not match, most likely due to NAs in \"data\"")
+    data <- pdata.frame(cbind(index(data), reY, reX, feX))
+    auxfm <- as.formula(paste("reY~", paste(dimnames(reX)[[2]], 
+                                            collapse = "+"), "+", paste(dimnames(feX)[[2]], collapse = "+"), 
+                              sep = ""))
+    auxmod <- plm(formula = auxfm, data = data, model = "pooling")
+    nvars <- dim(feX)[[2]]
+    R <- diag(1, nvars)
+    r <- rep(0, nvars)
+    omega0 <- vcov(auxmod)[(nvars + 2):(nvars * 2 + 1), (nvars + 
+                                                           2):(nvars * 2 + 1)]
+    Rbr <- R %*% coef(auxmod)[(nvars + 2):(nvars * 2 + 1)] - 
+      r
+    h2t <- as.numeric(crossprod(Rbr, solve(omega0, Rbr)))
+    ph2t <- pchisq(h2t, df = nvars, lower.tail = FALSE)
+    df <- nvars
+    names(df) <- "df"
+    names(h2t) <- "chisq"
+    if (!is.null(vcov)) {
+      vcov <- paste(", vcov: ", paste(deparse(substitute(vcov))), 
+                    sep = "")
+    }
+    haus2 <- list(statistic = h2t, p.value = ph2t, parameter = df, 
+                  method = paste("Regression-based Hausman test", vcov, 
+                                 sep = ""), alternative = "one model is inconsistent", 
+                  data.name = paste(deparse(substitute(x))))
+    class(haus2) <- "htest"
+    return(haus2)
+  })
+}
+
+
+
+
 
 
 
@@ -199,6 +292,7 @@ data = Gasoline
 model = c("within", "random")
 # "effect":	the effects introduced in the model, one of "individual", "time", "twoways", or "nested":
 effect = "twoways" # PAS SÛR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+vcov = vcovHC # PAS SÛR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 
@@ -254,11 +348,24 @@ auxfm <- as.formula(paste("reY~",
                           paste(dimnames(feX)[[2]],
                                 collapse="+"), sep=""))
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 # We then run the corresponding pooled regression:
-# auxmod <- plm(formula = auxfm, data = data_1, model = "pooling") => ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+auxmod <- plm(formula = reY ~  lrpmg + lcarpcap + lincomep.tilde + lrpmg.tilde + lcarpcap.tilde, data = data_2, model = "pooling") # => ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # => BECAUSE OF THIS ERROR, WE RUN THE EQUIVALENT OLS REGRESSION => CHECK THAT IT IS EQUIALENT !!!!!!!!!!!!!
 # plm(formula = x, data = data, model = "pooling") <=> lm(formula = x, data = data) => IN OTHER WORDS, CHECK IF THIS IS ALWAYS TRUE !!!!!!!
-auxmod <- lm(formula = auxfm, data = data_1)
+auxmod <- lm(formula = auxfm, data = data_2)
 
 # Number of variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde)
 nvars <- dim(feX)[[2]]
@@ -266,6 +373,12 @@ nvars <- dim(feX)[[2]]
 R <- diag(1, nvars)
 # Vector of zeros of dimension = nvars
 r <- rep(0, nvars) # here just for clarity of illustration
+
+
+
+
+
+
 
 
 
