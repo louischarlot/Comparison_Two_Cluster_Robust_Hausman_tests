@@ -17,7 +17,7 @@
 
 
 #####################################################################################################################################
-# FONCTION SUR  R ###################################################################################################################
+# FONCTION SUR  R EXISTANTE POUR COMMENCER ##########################################################################################
 #####################################################################################################################################
 # Les deux méthodes implémentées sur Stata sont tirées de (Wooldridge, 2002). Étant donné que notre article cite la version de (Wooldridge, 2010),
 # plus récente (donc possiblement améliorée/corrigée par rapport à celle de 2002), il serait peut-être mieux d'essayer d'implémenter 
