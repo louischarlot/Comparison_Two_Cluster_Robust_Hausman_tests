@@ -81,7 +81,7 @@ model = c("within", "random")
 # "effect":	the effects introduced in the model, one of "individual", "time", "twoways", or "nested":
 # effect = "twoways" or NULL ??? # PAS SÛR => ou RIEN ????? => DANS CE CAS FCT LUI DONNE VALEUR NULL !!!!!!!!!!!!!!!!!!!!!!!!!!!
 vcov_chosen = vcovHC # PAS SÛR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#vcov = NULL
+#vcov_chosen = NULL
 index = NULL
 
 
@@ -193,6 +193,7 @@ haus2 <- list(statistic   = h2t,
               data.name   = paste(deparse(substitute(x))))
 class(haus2) <- "htest"
 haus2
+
 
 
 
