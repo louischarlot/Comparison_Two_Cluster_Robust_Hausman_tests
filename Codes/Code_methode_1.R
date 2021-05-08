@@ -214,13 +214,21 @@ haus2
 # w_i : mean(lincomep) + mean(lrpmg) + mean(lcarpcap)
 
 
-
 # Fixed-effects manually:
 fixed_manual <-lm(lgaspcar ~lincomep + lrpmg + lcarpcap + factor(country) - 1, data = Gasoline)
 summary(fixed_manual)
 # Fixed-effects with plm:
 fe <- plm(form, data = Gasoline, model = "within") 
 summary(fe)
+
+
+
+# We add the columns "w_i": mean values by cluster for the different w_it:
+data <- Gasoline
+data$lincomep_mean <- ave(data$lincomep, data$country)
+data$lrpmg_mean <- ave(data$lrpmg, data$country)
+data$lcarpcap_mean <- ave(data$lcarpcap, data$country)
+
 
 
 
