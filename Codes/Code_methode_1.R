@@ -33,7 +33,7 @@ data("Gasoline", package = "plm")
 form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
 
 # Fixed effects:
-wi <- plm(form, data = Gasoline, model = "within") 
+fe <- plm(form, data = Gasoline, model = "within") 
 # Random effects:
 re <- plm(form, data = Gasoline, model = "random") 
 
@@ -41,7 +41,7 @@ re <- plm(form, data = Gasoline, model = "random")
 help(phtest)
 
 # Classical Hausman test:
-phtest(wi, re)
+phtest(fe, re)
 phtest(form, data = Gasoline)
 
 
@@ -205,6 +205,24 @@ haus2
 #####################################################################################################################################
 # 2eme TENTATIVE DE CODAGE SUR  R (Wooldridge, 2010) ################################################################################
 #####################################################################################################################################
+
+# We use:
+# y_it : lgaspcar
+# x_it : lincomep + lrpmg + lcarpcap + country_i
+# cluster : country
+# w_it : lincomep + lrpmg + lcarpcap
+# w_i : mean(lincomep) + mean(lrpmg) + mean(lcarpcap)
+
+
+
+# Fixed-effects manually:
+fixed_manual <-lm(lgaspcar ~lincomep + lrpmg + lcarpcap + factor(country) - 1, data = Gasoline)
+summary(fixed_manual)
+# Fixed-effects with plm:
+fe <- plm(form, data = Gasoline, model = "within") 
+summary(fe)
+
+
 
 
 
