@@ -12,7 +12,7 @@ form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
 
 # FE model
 fe <- plm(form, data = Gasoline, model = "within")
-fixed_manual <-lm(lgaspcar ~lincomep + lrpmg + lcarpcap + factor(country) - 1, data = Gasoline) # Note we alos estimate manually the model because the vcovBS function does not support plm objects
+fixed_manual <-lm(lgaspcar ~lincomep + lrpmg + lcarpcap + factor(country) - 1, data = Gasoline) # Note we also estimate manually the model because the vcovBS function does not support plm objects
 summary(fe)
 summary(fixed_manual) # same as fe 
 
