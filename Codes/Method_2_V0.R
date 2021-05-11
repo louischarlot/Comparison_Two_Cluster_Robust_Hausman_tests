@@ -15,9 +15,78 @@
 ##############################                                                 ##############################  
 #############################################################################################################
 
+#0. Install and load usefull packages
+
+#install.packages("plm")
+#install.packages("rsample")
+#install.packages("survey")
+#install.packages("sandwich")
+#install.packages("nlme")
+#install.packages("lme4")
+
+library(plm)
+library(rsample)
+library(survey)
+library(sandwich)
+library(nlme)
+library(lme4)
 
 
+#1. Model FE and RE (parametrisation)
+    ### a) general parametrisation 
+data("Gasoline", package = "plm")
+data = Gasoline
+form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
+#characteristics for model 
+x = form
+y = data$lgaspcar
+model = c("within", "random")
 
+  ### b) bootstrap parametrisation 
+set.seed(1)
+
+B = 399 #bootstrap coefficient
+beta0 = c(1,1,1) #3 variables ==> 3 parameters
+k = length(beta0)
+
+beta_fe_boot = matrix(0,B,k)
+beta_re_boot = matrix(0,B,k)
+
+
+#2. Start boostrap code
+
+for (b in 1:B) {
+  ### a) resample
+
+
+  index_b <- sample(length(y),length(y),replace=TRUE)
+  x_b <- lgaspcar[index_b] ~ lincomep[index_b] + lrpmg[index_b] + lcarpcap[index_b]
+  
+  ### b) FE model   
+  fe_mod <- plm(formula = x_b , data = data, model = "within")
+  beta_fe_boot[b,1:k] <- fe_mod$coefficients
+  
+  ### c) RE model
+  re_mod <- plm(formula = x_b , data = data, model = "random")
+  beta_re_boot[b,1:k] <- re_mod$coefficients
+ 
+
+}
+
+# 3. Create the haussman statistic 
+
+### a) Generate a vector of differences in coefficients
+
+### b) Generate bootstrapped differences in coefficients
+
+### c) generate covariance matrix of bootstrapped differences
+
+### d) generate the Hausman test statistic
+
+H= (beta_fe-beta_re)*(V_bootstrapped(beta_fe-beta_re))^(-1)*(beta_fe-beta_re)
+
+
+# 4. Test the statistic 
 
 #############################################################################################################
 ##############################                                                 ##############################  
