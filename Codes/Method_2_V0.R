@@ -46,11 +46,18 @@ model = c("within", "random")
 set.seed(1)
 
 B = 399 #bootstrap coefficient
-beta0 = c(1,1,1) #3 variables ==> 3 parameters
-k = length(beta0)
 
-beta_fe_boot = matrix(0,B,k)
-beta_re_boot = matrix(0,B,k)
+#generate the starting values
+fe_0 <- plm(formula = x , data = data, model = "within", vcov = vcovHC)
+beta_0_fe <- fe_0$coefficients
+re_0 <- plm(formula = x , data = data, model = "random", vcov = vcovHC)
+beta_0_re <- re_0$coefficients
+
+k_fe = length(beta_0_fe)
+k_re = length(beta_0_re)
+
+beta_fe_boot = matrix(0,B,k_fe)
+beta_re_boot = matrix(0,B,k_re)
 
 
 #2. Start boostrap code
@@ -63,12 +70,12 @@ for (b in 1:B) {
   x_b <- lgaspcar[index_b] ~ lincomep[index_b] + lrpmg[index_b] + lcarpcap[index_b]
   
   ### b) FE model   
-  fe_mod <- plm(formula = x_b , data = data, model = "within")
-  beta_fe_boot[b,1:k] <- fe_mod$coefficients
+  fe_mod <- plm(formula = x_b , data = data, model = "within", vcov = vcovHC)
+  beta_fe_boot[b,1:k_fe] <- fe_mod$coefficients
   
   ### c) RE model
-  re_mod <- plm(formula = x_b , data = data, model = "random")
-  beta_re_boot[b,1:k] <- re_mod$coefficients
+  re_mod <- plm(formula = x_b , data = data, model = "random", vcov = vcovHC)
+  beta_re_boot[b,1:k_re] <- re_mod$coefficients
  
 
 }
@@ -76,7 +83,7 @@ for (b in 1:B) {
 # 3. Create the haussman statistic 
 
 ### a) Generate a vector of differences in coefficients
-
+diff_beta_hat <- 
 ### b) Generate bootstrapped differences in coefficients
 
 ### c) generate covariance matrix of bootstrapped differences
