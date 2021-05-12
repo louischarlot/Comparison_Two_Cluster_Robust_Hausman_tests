@@ -31,7 +31,6 @@ library(sandwich)
 library(nlme)
 library(lme4)
 
-
 #1. Model FE and RE (parametrisation)
     ### a) general parametrisation 
 data("Gasoline", package = "plm")
@@ -53,18 +52,16 @@ beta_0_fe <- fe_0$coefficients
 re_0 <- plm(formula = x , data = data, model = "random", vcov = vcovHC)
 beta_0_re <- re_0$coefficients
 
-
 k_fe = length(beta_0_fe)
 k_re = length(beta_0_re) #beta_0_re has 4 coefficient because the first is the intercept
 
 beta_fe_boot = matrix(0,B,k_fe)
 beta_re_boot = matrix(0,B,k_re)
 
-
 #2. Start boostrap code
 
 for (b in 1:B) {
-  ### a) resample
+  ### a) resample ? 
 
 
   index_b <- sample(length(y),length(y),replace=TRUE)
@@ -93,10 +90,14 @@ diff_beta0_hat <- beta_0_fe - beta_0_re
   ### b) Generate bootstrapped differences in coefficients
 diff_betaboot_hat <- beta_fe_boot - beta_re_boot
   ### c) generate covariance matrix of bootstrapped differences
+# we can use that V_hat(FE-RE) = V_hat_FE - V_hat_RE 
+# use the funciton vcov?
+# we can also use the formula in Cameron Miller
+
+V_beta_boot_hat = 1/(399-1)*sum((diff_betaboot_hat)^2)
 
   ### d) generate the Hausman test statistic
-H= diff_betaboot_hat*(V_beta_boot)^(-1)*diff_betaboot_hat
-
+H= diff_betaboot_hat*(V_beta_boot_hat)^(-1)*diff_betaboot_hat
 
 # 4. Test the statistic 
 
@@ -107,7 +108,7 @@ H= diff_betaboot_hat*(V_beta_boot)^(-1)*diff_betaboot_hat
 #############################################################################################################
 
 
-### 1. Install and load the packages
+# 0. Install and load the packages
 #install.packages("plm")
 #install.packages("rsample")
 #install.packages("survey")
@@ -123,7 +124,7 @@ library(sandwich)
 library(nlme)
 library(lme4)
 
-### 2. Load the data 
+# 1. Load the data 
 data("Gasoline", package = "plm")
 data = Gasoline
 form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
@@ -135,12 +136,11 @@ model = c("within", "random")
 set.seed(1)
 B = 399 #bootstrap coefficient 
 
-### 3. Generate FE and RE models 
+# 2. Generate FE and RE models 
 fe_mod <- plm(formula = x, data = data, model = "within") #V_hat cannot be computed with plm
 fe_mod_man <- lm(lgaspcar ~lincomep + lrpmg + lcarpcap -1 + factor(country), data = data) 
 summary(fe_mod)
 summary(fe_mod_man)
-
 
 re_mod <- plm(formula = x, data = data, model = "random")
 re_mod_man <- lmer(lgaspcar ~ lincomep + lrpmg + lcarpcap - 1 + (1|country), data = data)
@@ -149,15 +149,15 @@ re_mod_man_2 <- lme(lgaspcar ~ lincomep + lrpmg + lcarpcap - 1, data = data, ran
 summary(re_mod)
 summary(re_mod_man)
 
-### 4. Compute the bootstrapped V_hat
+# 3. Compute the bootstrapped V_hat
 V_hat_FE <- vcovBS(fe_mod_man, cluster = data$country, R = 399, type = "xy")
 
 V_hat_RE <- vcovBS(re_mod_man_2, cluster = data$country, R = 399)
 
 V_hat = V_hat_FE - V_hat_RE 
 
-### 5. Obtaining beta_1_FE and beta_1_RE
+# 4. Obtaining beta_1_FE and beta_1_RE
 
-### 6. Compute the Haussman test statistic 
+# 5. Compute the Haussman test statistic 
 
-T_hauss <- (beta_1_FE - beta_1_RE)V^-1(beta_1_FE - beta_1_RE), 
+T_hauss <- (beta_1_FE - beta_1_RE)V^-1(beta_1_FE - beta_1_RE)
