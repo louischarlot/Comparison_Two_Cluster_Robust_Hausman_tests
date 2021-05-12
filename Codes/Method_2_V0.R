@@ -53,8 +53,9 @@ beta_0_fe <- fe_0$coefficients
 re_0 <- plm(formula = x , data = data, model = "random", vcov = vcovHC)
 beta_0_re <- re_0$coefficients
 
+
 k_fe = length(beta_0_fe)
-k_re = length(beta_0_re)
+k_re = length(beta_0_re) #beta_0_re has 4 coefficient because the first is the intercept
 
 beta_fe_boot = matrix(0,B,k_fe)
 beta_re_boot = matrix(0,B,k_re)
@@ -76,21 +77,25 @@ for (b in 1:B) {
   ### c) RE model
   re_mod <- plm(formula = x_b , data = data, model = "random", vcov = vcovHC)
   beta_re_boot[b,1:k_re] <- re_mod$coefficients
- 
+  
 
 }
 
+# re coefficients include time varying intercept while fe does not 
+# to have the same vector size, drop the intercept
+beta_0_re <- beta_0_re[2:4]
+beta_re_boot<-beta_re_boot[1:399,2:4]
+
 # 3. Create the haussman statistic 
 
-### a) Generate a vector of differences in coefficients
-diff_beta_hat <- 
-### b) Generate bootstrapped differences in coefficients
+  ### a) Generate a vector of differences in coefficients
+diff_beta0_hat <- beta_0_fe - beta_0_re
+  ### b) Generate bootstrapped differences in coefficients
+diff_betaboot_hat <- beta_fe_boot - beta_re_boot
+  ### c) generate covariance matrix of bootstrapped differences
 
-### c) generate covariance matrix of bootstrapped differences
-
-### d) generate the Hausman test statistic
-
-H= (beta_fe-beta_re)*(V_bootstrapped(beta_fe-beta_re))^(-1)*(beta_fe-beta_re)
+  ### d) generate the Hausman test statistic
+H= diff_betaboot_hat*(V_beta_boot)^(-1)*diff_betaboot_hat
 
 
 # 4. Test the statistic 
