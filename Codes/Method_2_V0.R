@@ -120,8 +120,6 @@ H1 = diff_beta0_hat[1]*(V_hat_FE_RE[1]^(-1))*diff_beta0_hat[1]
 H2 = diff_beta0_hat[2]*(V_hat_FE_RE[2]^(-1))*diff_beta0_hat[2]
 H3 = diff_beta0_hat[3]*(V_hat_FE_RE[3]^(-1))*diff_beta0_hat[3]
 
-H = t(diff_beta0_hat)%*%(V_hat_FE_RE^(-1))%*%diff_beta0_hat   # I do not get the same results as with H1,H2,H3 so must chech the matrix operations done 
-
 # 4. Test the statistic 
 
 #############################################################################################################
