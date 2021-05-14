@@ -1,11 +1,11 @@
-# Dans ce code R, on va essayer de reproduire la 2nde méthode proposé par Miller et Cameron (2015)
-# Cette méthode se décompose en plusieurs étapes: 
+# Dans ce code R, on va essayer de reproduire la 2nde mÃ©thode proposÃ© par Miller et Cameron (2015)
+# Cette mÃ©thode se dÃ©compose en plusieurs Ã©tapes: 
 #                         - utilisation du paired cluster bootstrap pour estimer V_hat dans B subsamples
 #                         - Haussman test for RE et FE  
 
 
-# POSSIBILITÉ 1: reproduction du code stata rhaussman 
-# POSSIBILITÉ 2: utilisation du code source R haussman test et modif V_hat  
+# POSSIBILITÃ‰ 1: reproduction du code stata rhaussman 
+# POSSIBILITÃ‰ 2: utilisation du code source R haussman test et modif V_hat  
 
 
 
@@ -98,6 +98,29 @@ V_beta_boot_hat = 1/(399-1)*sum((diff_betaboot_hat)^2)
 
   ### d) generate the Hausman test statistic
 H= diff_betaboot_hat*(V_beta_boot_hat)^(-1)*diff_betaboot_hat
+
+# PROPOSITION RACHEL FOR 3.
+# 3. Create the haussman statistic 
+
+# we can use that V_hat(FE-RE) = V_hat_FE - V_hat_RE so we first calculate the two V_hat separately
+betahat_bar_FE = 1/B*colSums(beta_fe_boot)
+varhat_betahat_FE <- 1/(B-1)*colSums(t(beta_fe_boot-betahat_bar_FE)%*%(beta_fe_boot-betahat_bar_FE))
+
+betahat_bar_RE = 1/B*colSums(beta_re_boot)
+varhat_betahat_RE <- 1/(B-1)*colSums(t(beta_re_boot-betahat_bar_RE)%*%(beta_re_boot-betahat_bar_RE))
+
+# The pairs cluster bootstrap variance is:
+V_hat_FE_RE = varhat_betahat_FE - varhat_betahat_RE
+
+# We calculate the difference between the estimated coefficients:
+diff_beta0_hat = beta_0_fe - beta_0_re
+
+### d) generate the Hausman test statistic for each coefficient
+H1 = diff_beta0_hat[1]*(V_hat_FE_RE[1]^(-1))*diff_beta0_hat[1]
+H2 = diff_beta0_hat[2]*(V_hat_FE_RE[2]^(-1))*diff_beta0_hat[2]
+H3 = diff_beta0_hat[3]*(V_hat_FE_RE[3]^(-1))*diff_beta0_hat[3]
+
+H = t(diff_beta0_hat)%*%(V_hat_FE_RE^(-1))%*%diff_beta0_hat   # I do not get the same results as with H1,H2,H3 so must chech the matrix operations done 
 
 # 4. Test the statistic 
 
