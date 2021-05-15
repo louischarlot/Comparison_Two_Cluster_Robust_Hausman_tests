@@ -99,7 +99,7 @@ duplicated(c.boot[,1:2]) ### this identifies the duplicated country-year pairs t
 
   index_b <- sample(length(y),length(y),replace=TRUE)
   x_b <- lgaspcar[index_b] ~ lincomep[index_b] + lrpmg[index_b] + lcarpcap[index_b]
-# x_b <- lgaspcar[c.boot] ~ lincomep[[c.boot] + lrpmg[c.boot] + lcarpcap[[c.boot]  if using above cluster resampling method  
+# x_b <- lgaspcar[c.boot] ~ lincomep[c.boot] + lrpmg[c.boot] + lcarpcap[c.boot]  if using above cluster resampling method  
   
   ### b) FE model   
   fe_mod <- plm(formula = x_b , data = data, model = "within", vcov = vcovHC)
