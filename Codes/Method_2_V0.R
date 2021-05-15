@@ -61,11 +61,45 @@ beta_re_boot = matrix(0,B,k_re)
 #2. Start boostrap code
 
 for (b in 1:B) {
-  ### a) resample ? 
+  ### a) resample ? => PROPOSITION RACHEL
 
+  # get a vector with all clusters
+  c <- sort(unique(data$country))
+  
+  # group the data points per cluster
+  clust.group <- function(c) {
+    data[data$country==c,]
+  }
+  
+  clust.list <- lapply(c,clust.group)
+  
+  # resample clusters with replacement
+  c.sample <- sample(c, replace=T)  
+  
+  clust.sample <- clust.list[c.sample]
+  
+  clust.size <- 19
+  
+  # combine the cluster list back to a single data matrix
+  clust.bind <- function(c) {
+    matrix(unlist(c),nrow=clust.size)
+  }
+  
+  c.boot <- do.call(rbind,lapply(clust.sample,clust.bind)) # c.boot = the new data set (single bootstrap replicate)
+  
+  # Just to maintain columns name
+  colnames(c.boot) <- names(data)
+  
+### Here the problem is that in the new sample dataset c.boot, some 'clusters' have been sampled more than once so we need to rename them otherwise plm does not work
+
+duplicated(c.boot[,1:2]) ### this identifies the duplicated country-year pairs that must be renamed
+### NEED TO FIND A FUNCTION TO RENAME THEM
+    
+###______________________end proposition Rachel for cluster resampling    
 
   index_b <- sample(length(y),length(y),replace=TRUE)
   x_b <- lgaspcar[index_b] ~ lincomep[index_b] + lrpmg[index_b] + lcarpcap[index_b]
+# x_b <- lgaspcar[c.boot] ~ lincomep[[c.boot] + lrpmg[c.boot] + lcarpcap[[c.boot]  if using above cluster resampling method  
   
   ### b) FE model   
   fe_mod <- plm(formula = x_b , data = data, model = "within", vcov = vcovHC)
@@ -74,8 +108,6 @@ for (b in 1:B) {
   ### c) RE model
   re_mod <- plm(formula = x_b , data = data, model = "random", vcov = vcovHC)
   beta_re_boot[b,1:k_re] <- re_mod$coefficients
-  
-
 }
 
 # re coefficients include time varying intercept while fe does not 
