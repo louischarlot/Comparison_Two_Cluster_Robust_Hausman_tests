@@ -91,22 +91,24 @@ for (b in 1:B) {
   colnames(c.boot) <- names(data)
   
 ### Here the problem is that in the new sample dataset c.boot, some 'clusters' have been sampled more than once so we need to rename them otherwise plm does not work
-
-duplicated(c.boot[,1:2]) ### this identifies the duplicated country-year pairs that must be renamed
-### NEED TO FIND A FUNCTION TO RENAME THEM
+  c.boot <- as.data.frame(c.boot)
+  c.boot <- c.boot[order(c.boot$country),]
+  c.boot$country <- rep(1:18, each=19) # no more duplicates !
     
 ###______________________end proposition Rachel for cluster resampling    
 
   index_b <- sample(length(y),length(y),replace=TRUE)
   x_b <- lgaspcar[index_b] ~ lincomep[index_b] + lrpmg[index_b] + lcarpcap[index_b]
-# x_b <- lgaspcar[c.boot] ~ lincomep[c.boot] + lrpmg[c.boot] + lcarpcap[c.boot]  if using above cluster resampling method  
+# x_b <- lgaspcar ~ lincomep + lrpmg + lcarpcap     ## if using above cluster resampling method  
   
   ### b) FE model   
   fe_mod <- plm(formula = x_b , data = data, model = "within", vcov = vcovHC)
+# fe_mod <- plm(formula = x_b , data = c.boot, model = "within", vcov = vcovHC)  ## if using above cluster resampling method  
   beta_fe_boot[b,1:k_fe] <- fe_mod$coefficients
   
   ### c) RE model
   re_mod <- plm(formula = x_b , data = data, model = "random", vcov = vcovHC)
+# re_mod <- plm(formula = x_b , data = c.boot, model = "random", vcov = vcovHC)  ## if using above cluster resampling method  
   beta_re_boot[b,1:k_re] <- re_mod$coefficients
 }
 
