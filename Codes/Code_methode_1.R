@@ -207,6 +207,14 @@ haus2
 #####################################################################################################################################
 
 
+#install.packages("plm")
+library (plm)
+
+# Load the data:
+data("Gasoline", package = "plm")
+
+
+
 # We add the columns "w_i": mean values by cluster for the different w_it:
 data <- Gasoline
 data$lincomep.mean <- ave(data$lincomep, data$country)
@@ -263,19 +271,17 @@ if (!is.null(vcov)) {
 }
 
 # Wr display the results of our Cluster-Robust Hausman test:
-haus2 <- list(statistic   = Wald_stat,
+haus_robust <- list(statistic   = Wald_stat,
               p.value     = pWald,
               parameter   = df,
               method      = paste("Regression-based Hausman test", vcov_chosen, sep=""),
               alternative = "one model is inconsistent",
               data.name   = paste(deparse(substitute(x))))
-class(haus2) <- "htest"
-haus2
+class(haus_robust) <- "htest"
+haus_robust
 
 
-
-
-
+#p-value = 0.005867
 
 
 
