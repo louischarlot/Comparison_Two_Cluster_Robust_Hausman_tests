@@ -206,22 +206,6 @@ haus2
 # 2eme TENTATIVE DE CODAGE SUR  R (Wooldridge, 2010)  ###############################################################################
 #####################################################################################################################################
 
-# We use:
-# y_it : lgaspcar
-# x_it : lincomep + lrpmg + lcarpcap + country_i
-# cluster : country
-# w_it : lincomep + lrpmg + lcarpcap
-# w_i : mean(lincomep) + mean(lrpmg) + mean(lcarpcap)
-
-
-# Fixed-effects manually:
-##fixed_manual <-lm(lgaspcar ~lincomep + lrpmg + lcarpcap + factor(country) - 1, data = Gasoline)
-##summary(fixed_manual)
-# Fixed-effects with plm:
-##fe <- plm(form, data = Gasoline, model = "within") 
-##summary(fe)
-
-
 
 # We add the columns "w_i": mean values by cluster for the different w_it:
 data <- Gasoline
