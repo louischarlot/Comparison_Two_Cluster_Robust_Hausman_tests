@@ -100,6 +100,7 @@ re_mod <- plm(formula = x, data = data, model = "random", effect = effect)
 reY <- pmodel.response(re_mod)
 
 # Construct the  transformed X for RE and FR => A REVERIFIER !!!!!
+# => REMOVES ALL constant variables for FE and ONLY INTERCEPT for RE:
 # When we have a mode written as "Y=Xβ+ε", the design matrix (or model matrix) is the matrix X.(I THINK => CHECK BETTER !!!)
 # The model.matrix methods builds a model matrix with transformations performed as specified by the model and effect arguments 
 # (and theta if model = "random" is requested), in this case the supplied data argument should be a model frame created by plm's model.frame method.
