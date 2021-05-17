@@ -144,7 +144,7 @@ auxfm <- as.formula(paste("reY~",
                                 collapse="+"), sep=""))
 
 # We then run the corresponding pooled regression:
-auxmod <- plm(formula = auxfm, data = data_2, model = "pooling") # => ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+auxmod <- plm(formula = auxfm, data = data_2, model = "pooling")
 
 # Number of "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde)
 nvars <- dim(feX)[[2]]
@@ -158,8 +158,8 @@ Zeros <- rep(0, nvars) # here just for clarity of illustration
 Covariance_tilde <- vcov_chosen(auxmod)[(nvars+2):(nvars*2+1),
                        (nvars+2):(nvars*2+1)]
 
-# Operation that finally gives the coefficients of the "tilde" variables in the auxiliary regression 
-# (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde) => UNDERSTAND BETTER WHY WE ARE DOING THIS WAY !!!!!!!!!!!!!!!!!!!!!!!!!
+# Operation that finally gives the coefficients of the "tilde" variables in the auxiliary regression in the right form
+# (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde) 
 Estimates_tilde <- Id %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - Zeros
 
 
@@ -237,8 +237,8 @@ haus2
 ##summary(reg_Wooldridge)
 
 
-# We then run the corresponding pooled regression:
-auxmod <- plm(formula = auxfm, data = data_2, model = "pooling") # => ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# We run the pooled regression proposed by (Wooldridge, 2010):
+auxmod <- plm(formula = auxfm, data = data_2, model = "pooling") 
 
 # Number of "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde)
 nvars <- dim(feX)[[2]]
@@ -252,8 +252,8 @@ Zeros <- rep(0, nvars) # here just for clarity of illustration
 Covariance_tilde <- vcov_chosen(auxmod)[(nvars+2):(nvars*2+1),
                                         (nvars+2):(nvars*2+1)]
 
-# Operation that finally gives the coefficients of the "tilde" variables in the auxiliary regression 
-# (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde) => UNDERSTAND BETTER WHY WE ARE DOING THIS WAY !!!!!!!!!!!!!!!!!!!!!!!!!
+# Operation that finally gives the coefficients of the "tilde" variables in the auxiliary regression in the right form
+# (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde) 
 Estimates_tilde <- Id %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - Zeros
 
 
