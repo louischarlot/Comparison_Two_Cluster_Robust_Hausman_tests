@@ -17,19 +17,19 @@
 
 #0. Install and load usefull packages
 
-#install.packages("plm")
-#install.packages("rsample")
-#install.packages("survey")
-#install.packages("sandwich")
-#install.packages("nlme")
-#install.packages("lme4")
+install.packages("plm")
+install.packages("rsample")
+install.packages("survey")
+install.packages("sandwich")
+install.packages("BBmisc")
+install.packages("purrr")
 
 library(plm)
 library(rsample)
 library(survey)
 library(sandwich)
-library(nlme)
-library(lme4)
+library(BBmisc)
+library(purrr)
 
 #1. Model FE and RE (parametrisation)
     ### a) general parametrisation 
@@ -47,9 +47,9 @@ set.seed(1)
 B = 399 #bootstrap coefficient
 
 #generate the starting values
-fe_0 <- plm(formula = x , data = data, model = "within", vcov = vcovHC)
+fe_0 <- plm(formula = x , data = data, model = "within")
 beta_0_fe <- fe_0$coefficients
-re_0 <- plm(formula = x , data = data, model = "random", vcov = vcovHC)
+re_0 <- plm(formula = x , data = data, model = "random")
 beta_0_re <- re_0$coefficients
 
 k_fe = length(beta_0_fe)
@@ -102,12 +102,12 @@ for (b in 1:B) {
 # x_b <- lgaspcar ~ lincomep + lrpmg + lcarpcap     ## if using above cluster resampling method  
   
   ### b) FE model   
-  fe_mod <- plm(formula = x_b , data = data, model = "within", vcov = vcovHC)
+  fe_mod <- plm(formula = x_b , data = data, model = "within")
 # fe_mod <- plm(formula = x_b , data = c.boot, model = "within", vcov = vcovHC)  ## if using above cluster resampling method  
   beta_fe_boot[b,1:k_fe] <- fe_mod$coefficients
   
   ### c) RE model
-  re_mod <- plm(formula = x_b , data = data, model = "random", vcov = vcovHC)
+  re_mod <- plm(formula = x_b , data = data, model = "random")
 # re_mod <- plm(formula = x_b , data = c.boot, model = "random", vcov = vcovHC)  ## if using above cluster resampling method  
   beta_re_boot[b,1:k_re] <- re_mod$coefficients
 }
@@ -152,68 +152,8 @@ V_hat_FE_RE = varhat_betahat_FE - varhat_betahat_RE
 diff_beta0_hat = beta_0_fe - beta_0_re
 
 ### d) generate the Hausman test statistic => follows a chi-square distribution with 3 degrees of freedom (because 3 coefs estimated)
-H1 = t(diff_beta0_hat)%*%(V_hat_FE_RE^(-1))%*%diff_beta0_hat
+H = t(diff_beta0_hat)%*%(V_hat_FE_RE^(-1))%*%diff_beta0_hat
 
 
 # 4. Test the statistic 
 
-#############################################################################################################
-##############################                                                 ##############################  
-##############################       CODE SUR R A PARTIR DE LA DEFINITION      ##############################
-##############################                                                 ##############################  
-#############################################################################################################
-
-
-# 0. Install and load the packages
-#install.packages("plm")
-#install.packages("rsample")
-#install.packages("survey")
-#install.packages("sandwich")
-#install.packages("nlme")
-#install.packages("lme4")
-
-
-library(plm)
-library(rsample)
-library(survey)
-library(sandwich)
-library(nlme)
-library(lme4)
-
-# 1. Load the data 
-data("Gasoline", package = "plm")
-data = Gasoline
-form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
-#characteristics for model 
-x = form
-model = c("within", "random")
-
-
-set.seed(1)
-B = 399 #bootstrap coefficient 
-
-# 2. Generate FE and RE models 
-fe_mod <- plm(formula = x, data = data, model = "within") #V_hat cannot be computed with plm
-fe_mod_man <- lm(lgaspcar ~lincomep + lrpmg + lcarpcap -1 + factor(country), data = data) 
-summary(fe_mod)
-summary(fe_mod_man)
-
-re_mod <- plm(formula = x, data = data, model = "random")
-re_mod_man <- lmer(lgaspcar ~ lincomep + lrpmg + lcarpcap - 1 + (1|country), data = data)
-re_mod_man_2 <- lme(lgaspcar ~ lincomep + lrpmg + lcarpcap - 1, data = data, random = ~1|country)
-
-summary(re_mod)
-summary(re_mod_man)
-
-# 3. Compute the bootstrapped V_hat
-V_hat_FE <- vcovBS(fe_mod_man, cluster = data$country, R = 399, type = "xy")
-
-V_hat_RE <- vcovBS(re_mod_man_2, cluster = data$country, R = 399)
-
-V_hat = V_hat_FE - V_hat_RE 
-
-# 4. Obtaining beta_1_FE and beta_1_RE
-
-# 5. Compute the Haussman test statistic 
-
-T_hauss <- (beta_1_FE - beta_1_RE)V^-1(beta_1_FE - beta_1_RE)
