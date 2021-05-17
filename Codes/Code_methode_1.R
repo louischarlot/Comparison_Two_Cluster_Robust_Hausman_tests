@@ -148,29 +148,29 @@ auxmod <- plm(formula = auxfm, data = data_2, model = "pooling") # => ERROR !!!!
 # Number of "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde)
 nvars <- dim(feX)[[2]]
 # Identity matrix of dimension = (nvars x nvars)
-R <- diag(1, nvars)
+Id <- diag(1, nvars)
 # Vector of zeros of dimension = nvars
-r <- rep(0, nvars) # here just for clarity of illustration
+Zeros <- rep(0, nvars) # here just for clarity of illustration
 
 # Covariance matrix for the auxiliary regression for the "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde):
-omega0 <- vcov_chosen(auxmod)[(nvars+2):(nvars*2+1),
+Covariance_tilde <- vcov_chosen(auxmod)[(nvars+2):(nvars*2+1),
                        (nvars+2):(nvars*2+1)]
 
 # Operation that finally gives the coefficients of the "tilde" variables in the auxiliary regression 
-# (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde) => UNDERSTAND BETTER WHAT WE ARE DOING HERE !!!!!!!!!!!!!!!!!!!!!!!!!
-Rbr <- R %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - r
+# (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde) => UNDERSTAND BETTER WHY WE ARE DOING THIS WAY !!!!!!!!!!!!!!!!!!!!!!!!!
+Estimates_tilde <- Id %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - Zeros
 
-# WRITE BETTER WHAT WE DO HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# We calculate the Hausman statistic of our Cluster-Robust Hausman test:
+
+# We calculate the Hausman statistic of our Cluster-Robust Hausman test => SO HERE IT IS: t(Estimates_tilde) %*% (Covariance_tilde)^(-1) %*% Estimates_tilde
 # "crossprod(A,B)" is the cross-product of matrices A and B gives t(A) %*% B.
 # "solve(a,b)" will solve the equation a %*% x = b for x, where b can be either a vector or a matrix.
-h2t <- as.numeric(crossprod(Rbr, solve(omega0, Rbr)))
+Haussman_stat <- as.numeric(crossprod(Estimates_tilde, solve(Covariance_tilde, Estimates_tilde)))
 
 # WRITE BETTER WHAT WE DO HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # We calculate the p-value of our Cluster-Robust Hausman test:
 # "pchisq" gives the distribution function for the chi-squared (chi^2) distribution with df degrees of freedom
 #  "lower.tail = FALSE" => probabilities are P[X > x]
-ph2t <- pchisq(h2t, df = nvars, lower.tail = FALSE)
+ph2t <- pchisq(Haussman_stat, df = nvars, lower.tail = FALSE)
 
 # We name "df" the degrees of freedom and "chisq" the calculated chi-squared:
 df <- nvars
@@ -215,22 +215,26 @@ haus2
 
 
 # Fixed-effects manually:
-fixed_manual <-lm(lgaspcar ~lincomep + lrpmg + lcarpcap + factor(country) - 1, data = Gasoline)
-summary(fixed_manual)
+##fixed_manual <-lm(lgaspcar ~lincomep + lrpmg + lcarpcap + factor(country) - 1, data = Gasoline)
+##summary(fixed_manual)
 # Fixed-effects with plm:
-fe <- plm(form, data = Gasoline, model = "within") 
-summary(fe)
+##fe <- plm(form, data = Gasoline, model = "within") 
+##summary(fe)
 
 
 
 # We add the columns "w_i": mean values by cluster for the different w_it:
-data <- Gasoline
-data$lincomep_mean <- ave(data$lincomep, data$country)
-data$lrpmg_mean <- ave(data$lrpmg, data$country)
-data$lcarpcap_mean <- ave(data$lcarpcap, data$country)
+##data <- Gasoline
+##data$lincomep_mean <- ave(data$lincomep, data$country)
+##data$lrpmg_mean <- ave(data$lrpmg, data$country)
+##$lcarpcap_mean <- ave(data$lcarpcap, data$country)
 
 
 
+# Regression proposed by (Wooldridge, 2010): y_it = beta*x_it + chi*w_i + (a_i + u_it)
+
+##reg_Wooldridge <- lm(lgaspcar ~lincomep + lrpmg + lcarpcap + lincomep_mean + lrpmg_mean + lcarpcap_mean + factor(country) - 1, data)
+##summary(reg_Wooldridge)
 
 
 
