@@ -162,19 +162,19 @@ Covariance_tilde <- vcov_chosen(auxmod)[(nvars+2):(nvars*2+1),
 Estimates_tilde <- Id %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - Zeros
 
 
-# We calculate the Hausman statistic of our Cluster-Robust Hausman test => SO HERE IT IS: t(Estimates_tilde) %*% (Covariance_tilde)^(-1) %*% Estimates_tilde
+# We calculate our Cluster-Robust Wald statistic => SO HERE IT IS: t(Estimates_tilde) %*% (Covariance_tilde)^(-1) %*% Estimates_tilde
 # "crossprod(A,B)" is the cross-product of matrices A and B gives t(A) %*% B.
 # "solve(a,b)" will solve the equation a %*% x = b for x, where b can be either a vector or a matrix.
-Haussman_stat <- as.numeric(crossprod(Estimates_tilde, solve(Covariance_tilde, Estimates_tilde)))
+Wald_stat <- as.numeric(crossprod(Estimates_tilde, solve(Covariance_tilde, Estimates_tilde)))
 
 # We calculate the p-value of our Cluster-Robust Hausman test:
 # "pchisq" gives the probability that a chi2(df) > Haussman_stat (with df number of degrees of freedom) => CHECK ONCE AGAIN !!!!
-pHaussman <- pchisq(Haussman_stat, df = nvars, lower.tail = FALSE)
+pWald <- pchisq(Wald_stat, df = nvars, lower.tail = FALSE)
 
 # We name "df" the degrees of freedom and "chisq" the calculated chi-squared:
 df <- nvars
 names(df) <- "df"
-names(Haussman_stat) <- "chisq"
+names(Wald_stat) <- "chisq"
 
 # If "vcov" function is not the default one, we display which one it is in our final result: => NE MARCHE PAS MAIS PAS TRÈS GRAVE !!!!!!!!!!!!!!
 if (!is.null(vcov)) {
@@ -184,8 +184,8 @@ if (!is.null(vcov)) {
 }
 
 # Wr display the results of our Cluster-Robust Hausman test:
-haus2 <- list(statistic   = Haussman_stat,
-              p.value     = pHaussman,
+haus2 <- list(statistic   = Wald_stat,
+              p.value     = pWald,
               parameter   = df,
               method      = paste("Regression-based Hausman test", vcov_chosen, sep=""),
               alternative = "one model is inconsistent",
