@@ -1,4 +1,5 @@
-# Code for 1st method: (Wooldridge, 2010)
+# Dans ce code R, on va essayer de reproduire la 1ère méthode, expliquée pour Stata
+# dans 
 
 
 
@@ -152,6 +153,7 @@ Id <- diag(1, nvars)
 Zeros <- rep(0, nvars) # here just for clarity of illustration
 
 # Covariance matrix for the auxiliary regression for the "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde):
+# => IT CAN (AND IN OUR CASE SHOULD) BE ROBUSTIFIED !!!
 Covariance_tilde <- vcov_chosen(auxmod)[(nvars+2):(nvars*2+1),
                        (nvars+2):(nvars*2+1)]
 
@@ -165,10 +167,8 @@ Estimates_tilde <- Id %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - Zeros
 # "solve(a,b)" will solve the equation a %*% x = b for x, where b can be either a vector or a matrix.
 Haussman_stat <- as.numeric(crossprod(Estimates_tilde, solve(Covariance_tilde, Estimates_tilde)))
 
-# WRITE BETTER WHAT WE DO HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # We calculate the p-value of our Cluster-Robust Hausman test:
-# "pchisq" gives the distribution function for the chi-squared (chi^2) distribution with df degrees of freedom
-#  "lower.tail = FALSE" => probabilities are P[X > x]
+# "pchisq" gives the probability that a chi2(df) > Haussman_stat (with df number of degrees of freedom) => CHECK ONCE AGAIN !!!!
 ph2t <- pchisq(Haussman_stat, df = nvars, lower.tail = FALSE)
 
 # We name "df" the degrees of freedom and "chisq" the calculated chi-squared:
