@@ -147,4 +147,8 @@ H = t(diff_beta0_hat)%*%(V_hat_FE_RE^(-1))%*%diff_beta0_hat
 
 
 # 4. Test the statistic 
+# we want to compare the H statistic to a Chi-square distribution with 3 degrees of freedom
+#generate the p-value of H: 
+p_value_H <- pchisq(H, df=3, lower.tail=FALSE)
+p_value_H
 
