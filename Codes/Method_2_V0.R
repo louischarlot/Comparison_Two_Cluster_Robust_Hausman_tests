@@ -4,15 +4,10 @@
 #                         - Haussman test for RE et FE  
 
 
-# POSSIBILITÉ 1: reproduction du code stata rhaussman 
-# POSSIBILITÉ 2: utilisation du code source R haussman test et modif V_hat  
-
-
-
 #############################################################################################################
-##############################                                                 ##############################  
-##############################  TEST DE REPROCUDCTION DU CODE STATA RHAUSSMAN  ##############################
-##############################                                                 ##############################  
+#############################                                                   #############################  
+#############################  CODE METHODE 2: PAIRS CLUSTER BOOTSTRAP VARIANCE #############################
+#############################                                                   #############################  
 #############################################################################################################
 
 #0. Install and load usefull packages
@@ -32,7 +27,8 @@ library(BBmisc)
 library(purrr)
 
 #1. Model FE and RE (parametrisation)
-    ### a) general parametrisation 
+
+### a) general parametrisation 
 data("Gasoline", package = "plm")
 data = Gasoline
 form <- lgaspcar ~ lincomep + lrpmg + lcarpcap
@@ -41,17 +37,18 @@ x = form
 y = data$lgaspcar
 model = c("within", "random")
 
-  ### b) bootstrap parametrisation 
-set.seed(1)
+### b) bootstrap parametrisation 
 
+set.seed(1)
 B = 399 #bootstrap coefficient
 
-#generate the starting values
+# compute the estimated coefficients 
 fe_0 <- plm(formula = x , data = data, model = "within")
 beta_0_fe <- fe_0$coefficients
 re_0 <- plm(formula = x , data = data, model = "random")
 beta_0_re <- re_0$coefficients
 
+# Initialization for the bootstrap
 k_fe = length(beta_0_fe)
 k_re = length(beta_0_re) #beta_0_re has 4 coefficient because the first is the intercept
 
