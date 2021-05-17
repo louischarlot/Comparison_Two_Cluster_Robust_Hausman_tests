@@ -203,7 +203,7 @@ haus2
 
 
 #####################################################################################################################################
-# 2eme TENTATIVE DE CODAGE SUR  R (Wooldridge, 2010) => NON, RESTER SUR LA PREMIERE !!! #############################################
+# 2eme TENTATIVE DE CODAGE SUR  R (Wooldridge, 2010)  ###############################################################################
 #####################################################################################################################################
 
 # We use:
@@ -224,20 +224,20 @@ haus2
 
 
 # We add the columns "w_i": mean values by cluster for the different w_it:
-##data <- Gasoline
-##data$lincomep_mean <- ave(data$lincomep, data$country)
-##data$lrpmg_mean <- ave(data$lrpmg, data$country)
-##$lcarpcap_mean <- ave(data$lcarpcap, data$country)
+data <- Gasoline
+data$lincomep_mean <- ave(data$lincomep, data$country)
+data$lrpmg_mean <- ave(data$lrpmg, data$country)
+data$lcarpcap_mean <- ave(data$lcarpcap, data$country)
 
 
 
-# Regression proposed by (Wooldridge, 2010): y_it = beta*x_it + chi*w_i + (a_i + u_it)
-
-##reg_Wooldridge <- lm(lgaspcar ~lincomep + lrpmg + lcarpcap + lincomep_mean + lrpmg_mean + lcarpcap_mean + factor(country) - 1, data)
-##summary(reg_Wooldridge)
+# We run the pooled regression proposed by (Wooldridge, 2010): y_it = beta*x_it + chi*w_i + (a_i + u_it)
 
 
-# We run the pooled regression proposed by (Wooldridge, 2010):
+
+
+auxfm <- lgaspcar ~ lincomep + lrpmg + lcarpcap + lincomep_mean + lrpmg_mean + lcarpcap_mean
+
 auxmod <- plm(formula = auxfm, data = data_2, model = "pooling") 
 
 # Number of "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde)
