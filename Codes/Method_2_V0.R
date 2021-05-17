@@ -117,31 +117,33 @@ for (b in 1:B) {
 beta_0_re <- beta_0_re[2:4]
 beta_re_boot<-beta_re_boot[1:399,2:4]
 
-# 3. Create the haussman statistic /!/ WRONG old version chloé
 
-  ### a) Generate a vector of differences in coefficients
-diff_beta0_hat <- beta_0_fe - beta_0_re
-  ### b) Generate bootstrapped differences in coefficients
-diff_betaboot_hat <- beta_fe_boot - beta_re_boot
-  ### c) generate covariance matrix of bootstrapped differences
-# we can use that V_hat(FE-RE) = V_hat_FE - V_hat_RE 
-# use the funciton vcov?
-# we can also use the formula in Cameron Miller
-
-V_beta_boot_hat = 1/(399-1)*sum((diff_betaboot_hat)^2)
-
-  ### d) generate the Hausman test statistic
-H= diff_betaboot_hat*(V_beta_boot_hat)^(-1)*diff_betaboot_hat
-
-# PROPOSITION RACHEL FOR 3. /!/ WRONG but working on it
 # 3. Create the haussman statistic 
-
 # we can use that V_hat(FE-RE) = V_hat_FE - V_hat_RE so we first calculate the two V_hat separately
-betahat_bar_FE = 1/B*colSums(beta_fe_boot)
-varhat_betahat_FE <- 1/(B-1)*colSums(t(beta_fe_boot-betahat_bar_FE)%*%(beta_fe_boot-betahat_bar_FE))
 
+# Calculate V_hat_FE using the formula in Cameron and Miller (2015)
+betahat_bar_FE = 1/B*colSums(beta_fe_boot)
+beta_fe_boot_demeaned <- sweep(beta_fe_boot, 2, betahat_bar_FE, "-")
+
+list0_FE <- lapply(1:399, matrix, data=c(0,0,0,0,0,0,0,0,0), nrow=3, ncol=3)
+for (i in 1:399){
+  list0_FE[[i]] <- beta_fe_boot_demeaned[i,]%*%t(beta_fe_boot_demeaned[i,])
+}
+sum_mat_fe <- Reduce("+", list0_FE)
+
+varhat_betahat_FE <- 1/(B-1)*sum_mat_fe
+
+# Calculate V_hat_RE similarly 
 betahat_bar_RE = 1/B*colSums(beta_re_boot)
-varhat_betahat_RE <- 1/(B-1)*colSums(t(beta_re_boot-betahat_bar_RE)%*%(beta_re_boot-betahat_bar_RE))
+beta_re_boot_demeaned <- sweep(beta_re_boot, 2, betahat_bar_RE, "-")
+
+list0_RE <- lapply(1:399, matrix, data=c(0,0,0,0,0,0,0,0,0), nrow=3, ncol=3)
+for (i in 1:399){
+  list0_RE[[i]] <- beta_re_boot_demeaned[i,]%*%t(beta_re_boot_demeaned[i,])
+}
+sum_mat_re <- Reduce("+", list0_RE)
+
+varhat_betahat_RE <- 1/(B-1)*sum_mat_re
 
 # The pairs cluster bootstrap variance is:
 V_hat_FE_RE = varhat_betahat_FE - varhat_betahat_RE
@@ -149,10 +151,9 @@ V_hat_FE_RE = varhat_betahat_FE - varhat_betahat_RE
 # We calculate the difference between the estimated coefficients:
 diff_beta0_hat = beta_0_fe - beta_0_re
 
-### d) generate the Hausman test statistic for each coefficient
-H1 = diff_beta0_hat[1]*(V_hat_FE_RE[1]^(-1))*diff_beta0_hat[1]
-H2 = diff_beta0_hat[2]*(V_hat_FE_RE[2]^(-1))*diff_beta0_hat[2]
-H3 = diff_beta0_hat[3]*(V_hat_FE_RE[3]^(-1))*diff_beta0_hat[3]
+### d) generate the Hausman test statistic => follows a chi-square distribution with 3 degrees of freedom (because 3 coefs estimated)
+H1 = diff_beta0_hat*(V_hat_FE_RE^(-1))*diff_beta0_hat
+
 
 # 4. Test the statistic 
 
