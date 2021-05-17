@@ -1,5 +1,4 @@
-# Dans ce code R, on va essayer de reproduire la 1ère méthode, expliquée pour Stata
-# dans 
+# Code for 1st method: (Wooldridge, 2010)
 
 
 
