@@ -117,7 +117,7 @@ for (b in 1:B) {
 beta_0_re <- beta_0_re[2:4]
 beta_re_boot<-beta_re_boot[1:399,2:4]
 
-# 3. Create the haussman statistic 
+# 3. Create the haussman statistic /!/ WRONG old version chloé
 
   ### a) Generate a vector of differences in coefficients
 diff_beta0_hat <- beta_0_fe - beta_0_re
@@ -133,7 +133,7 @@ V_beta_boot_hat = 1/(399-1)*sum((diff_betaboot_hat)^2)
   ### d) generate the Hausman test statistic
 H= diff_betaboot_hat*(V_beta_boot_hat)^(-1)*diff_betaboot_hat
 
-# PROPOSITION RACHEL FOR 3.
+# PROPOSITION RACHEL FOR 3. /!/ WRONG but working on it
 # 3. Create the haussman statistic 
 
 # we can use that V_hat(FE-RE) = V_hat_FE - V_hat_RE so we first calculate the two V_hat separately
