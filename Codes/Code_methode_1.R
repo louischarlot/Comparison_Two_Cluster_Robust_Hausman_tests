@@ -169,12 +169,12 @@ Haussman_stat <- as.numeric(crossprod(Estimates_tilde, solve(Covariance_tilde, E
 
 # We calculate the p-value of our Cluster-Robust Hausman test:
 # "pchisq" gives the probability that a chi2(df) > Haussman_stat (with df number of degrees of freedom) => CHECK ONCE AGAIN !!!!
-ph2t <- pchisq(Haussman_stat, df = nvars, lower.tail = FALSE)
+pHaussman <- pchisq(Haussman_stat, df = nvars, lower.tail = FALSE)
 
 # We name "df" the degrees of freedom and "chisq" the calculated chi-squared:
 df <- nvars
 names(df) <- "df"
-names(h2t) <- "chisq"
+names(Haussman_stat) <- "chisq"
 
 # If "vcov" function is not the default one, we display which one it is in our final result: => NE MARCHE PAS MAIS PAS TRÈS GRAVE !!!!!!!!!!!!!!
 if (!is.null(vcov)) {
@@ -184,8 +184,8 @@ if (!is.null(vcov)) {
 }
 
 # Wr display the results of our Cluster-Robust Hausman test:
-haus2 <- list(statistic   = h2t,
-              p.value     = ph2t,
+haus2 <- list(statistic   = Haussman_stat,
+              p.value     = pHaussman,
               parameter   = df,
               method      = paste("Regression-based Hausman test", vcov_chosen, sep=""),
               alternative = "one model is inconsistent",
