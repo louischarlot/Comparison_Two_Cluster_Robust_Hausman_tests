@@ -225,42 +225,37 @@ haus2
 
 # We add the columns "w_i": mean values by cluster for the different w_it:
 data <- Gasoline
-data$lincomep_mean <- ave(data$lincomep, data$country)
-data$lrpmg_mean <- ave(data$lrpmg, data$country)
-data$lcarpcap_mean <- ave(data$lcarpcap, data$country)
+data$lincomep.mean <- ave(data$lincomep, data$country)
+data$lrpmg.mean <- ave(data$lrpmg, data$country)
+data$lcarpcap.mean <- ave(data$lcarpcap, data$country)
 
 
 
-# We run the pooled regression proposed by (Wooldridge, 2010): y_it = beta*x_it + chi*w_i + (a_i + u_it)
-
-
-
-
-auxfm <- lgaspcar ~ lincomep + lrpmg + lcarpcap + lincomep_mean + lrpmg_mean + lcarpcap_mean
-
+# We run the pooled regression proposed by (Wooldridge, 2010): y_it = beta*x_it + chi*w_i + (a_i + u_it):
+auxfm <- lgaspcar ~ lincomep + lrpmg + lcarpcap + lincomep.mean + lrpmg.mean + lcarpcap.mean
 auxmod <- plm(formula = auxfm, data = data_2, model = "pooling") 
 
-# Number of "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde)
+# Number of "mean" variables (in our example: lincomep.mean, lrpmg.mean and lcarpcap.mean)
 nvars <- dim(feX)[[2]]
 # Identity matrix of dimension = (nvars x nvars)
 Id <- diag(1, nvars)
 # Vector of zeros of dimension = nvars
 Zeros <- rep(0, nvars) # here just for clarity of illustration
 
-# Covariance matrix for the auxiliary regression for the "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde):
+# Covariance matrix for the auxiliary regression for the "mean" variables (in our example: lincomep.mean, lrpmg.mean and lcarpcap.mean):
 # => IT CAN (AND IN OUR CASE SHOULD) BE ROBUSTIFIED !!!
-Covariance_tilde <- vcov_chosen(auxmod)[(nvars+2):(nvars*2+1),
+Covariance_mean <- vcov_chosen(auxmod)[(nvars+2):(nvars*2+1),
                                         (nvars+2):(nvars*2+1)]
 
-# Operation that finally gives the coefficients of the "tilde" variables in the auxiliary regression in the right form
-# (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde) 
-Estimates_tilde <- Id %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - Zeros
+# Operation that finally gives the coefficients of the "mean" variables in the auxiliary regression in the right form
+# (in our example: lincomep.mean, lrpmg.mean and lcarpcap.mean) 
+Estimates_mean <- Id %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - Zeros
 
 
-# We calculate our Cluster-Robust Wald statistic => SO HERE IT IS: t(Estimates_tilde) %*% (Covariance_tilde)^(-1) %*% Estimates_tilde
+# We calculate our Cluster-Robust Wald statistic => SO HERE IT IS: t(Estimates_mean) %*% (Covariance_mean)^(-1) %*% Estimates_mean
 # "crossprod(A,B)" is the cross-product of matrices A and B gives t(A) %*% B.
 # "solve(a,b)" will solve the equation a %*% x = b for x, where b can be either a vector or a matrix.
-Wald_stat <- as.numeric(crossprod(Estimates_tilde, solve(Covariance_tilde, Estimates_tilde)))
+Wald_stat <- as.numeric(crossprod(Estimates_mean, solve(Covariance_mean, Estimates_mean)))
 
 # We calculate the p-value of our Cluster-Robust Hausman test:
 # "pchisq" gives the probability that a chi2(df) > Haussman_stat (with df number of degrees of freedom) => CHECK ONCE AGAIN !!!!
