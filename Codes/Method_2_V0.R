@@ -94,21 +94,15 @@ for (b in 1:B) {
   c.boot <- as.data.frame(c.boot)
   c.boot <- c.boot[order(c.boot$country),]
   c.boot$country <- rep(1:18, each=19) # no more duplicates !
-    
-###______________________end proposition Rachel for cluster resampling    
-
-  index_b <- sample(length(y),length(y),replace=TRUE)
-  x_b <- lgaspcar[index_b] ~ lincomep[index_b] + lrpmg[index_b] + lcarpcap[index_b]
-# x_b <- lgaspcar ~ lincomep + lrpmg + lcarpcap     ## if using above cluster resampling method  
+     
+  x_b <- lgaspcar ~ lincomep + lrpmg + lcarpcap     
   
   ### b) FE model   
-  fe_mod <- plm(formula = x_b , data = data, model = "within")
-# fe_mod <- plm(formula = x_b , data = c.boot, model = "within", vcov = vcovHC)  ## if using above cluster resampling method  
+  fe_mod <- plm(formula = x_b , data = c.boot, model = "within")  
   beta_fe_boot[b,1:k_fe] <- fe_mod$coefficients
   
   ### c) RE model
-  re_mod <- plm(formula = x_b , data = data, model = "random")
-# re_mod <- plm(formula = x_b , data = c.boot, model = "random", vcov = vcovHC)  ## if using above cluster resampling method  
+  re_mod <- plm(formula = x_b , data = c.boot, model = "random") 
   beta_re_boot[b,1:k_re] <- re_mod$coefficients
 }
 
