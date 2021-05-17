@@ -237,6 +237,58 @@ haus2
 ##summary(reg_Wooldridge)
 
 
+# We then run the corresponding pooled regression:
+auxmod <- plm(formula = auxfm, data = data_2, model = "pooling") # => ERROR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# Number of "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde)
+nvars <- dim(feX)[[2]]
+# Identity matrix of dimension = (nvars x nvars)
+Id <- diag(1, nvars)
+# Vector of zeros of dimension = nvars
+Zeros <- rep(0, nvars) # here just for clarity of illustration
+
+# Covariance matrix for the auxiliary regression for the "tilde" variables (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde):
+# => IT CAN (AND IN OUR CASE SHOULD) BE ROBUSTIFIED !!!
+Covariance_tilde <- vcov_chosen(auxmod)[(nvars+2):(nvars*2+1),
+                                        (nvars+2):(nvars*2+1)]
+
+# Operation that finally gives the coefficients of the "tilde" variables in the auxiliary regression 
+# (in our example: lincomep.tilde, lrpmg.tilde and lcarpcap.tilde) => UNDERSTAND BETTER WHY WE ARE DOING THIS WAY !!!!!!!!!!!!!!!!!!!!!!!!!
+Estimates_tilde <- Id %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - Zeros
+
+
+# We calculate our Cluster-Robust Wald statistic => SO HERE IT IS: t(Estimates_tilde) %*% (Covariance_tilde)^(-1) %*% Estimates_tilde
+# "crossprod(A,B)" is the cross-product of matrices A and B gives t(A) %*% B.
+# "solve(a,b)" will solve the equation a %*% x = b for x, where b can be either a vector or a matrix.
+Wald_stat <- as.numeric(crossprod(Estimates_tilde, solve(Covariance_tilde, Estimates_tilde)))
+
+# We calculate the p-value of our Cluster-Robust Hausman test:
+# "pchisq" gives the probability that a chi2(df) > Haussman_stat (with df number of degrees of freedom) => CHECK ONCE AGAIN !!!!
+pWald <- pchisq(Wald_stat, df = nvars, lower.tail = FALSE)
+
+# We name "df" the degrees of freedom and "chisq" the calculated chi-squared:
+df <- nvars
+names(df) <- "df"
+names(Wald_stat) <- "chisq"
+
+# If "vcov" function is not the default one, we display which one it is in our final result: => NE MARCHE PAS MAIS PAS TRÈS GRAVE !!!!!!!!!!!!!!
+if (!is.null(vcov)) {
+  vcov_chosen <- paste(", vcov: ",
+                       paste(deparse(substitute(vcov_chosen))),
+                       sep="")
+}
+
+# Wr display the results of our Cluster-Robust Hausman test:
+haus2 <- list(statistic   = Wald_stat,
+              p.value     = pWald,
+              parameter   = df,
+              method      = paste("Regression-based Hausman test", vcov_chosen, sep=""),
+              alternative = "one model is inconsistent",
+              data.name   = paste(deparse(substitute(x))))
+class(haus2) <- "htest"
+haus2
+
+
 
 
 
