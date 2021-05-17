@@ -212,15 +212,20 @@ data <- Gasoline
 data$lincomep.mean <- ave(data$lincomep, data$country)
 data$lrpmg.mean <- ave(data$lrpmg, data$country)
 data$lcarpcap.mean <- ave(data$lcarpcap, data$country)
+NUMBER_MEAN_VARIABLES <- 3
+
+# Variance for Robust Wald statistic:
+vcov_chosen <- vcovHC
+
 
 
 
 # We run the pooled regression proposed by (Wooldridge, 2010): y_it = beta*x_it + chi*w_i + (a_i + u_it):
 auxfm <- lgaspcar ~ lincomep + lrpmg + lcarpcap + lincomep.mean + lrpmg.mean + lcarpcap.mean
-auxmod <- plm(formula = auxfm, data = data_2, model = "pooling") 
+auxmod <- plm(formula = auxfm, data = data, model = "pooling") 
 
 # Number of "mean" variables (in our example: lincomep.mean, lrpmg.mean and lcarpcap.mean)
-nvars <- dim(feX)[[2]]
+nvars <- NUMBER_MEAN_VARIABLES
 # Identity matrix of dimension = (nvars x nvars)
 Id <- diag(1, nvars)
 # Vector of zeros of dimension = nvars
