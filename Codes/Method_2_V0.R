@@ -152,7 +152,7 @@ V_hat_FE_RE = varhat_betahat_FE - varhat_betahat_RE
 diff_beta0_hat = beta_0_fe - beta_0_re
 
 ### d) generate the Hausman test statistic => follows a chi-square distribution with 3 degrees of freedom (because 3 coefs estimated)
-H1 = diff_beta0_hat*(V_hat_FE_RE^(-1))*diff_beta0_hat
+H1 = t(diff_beta0_hat)%*%(V_hat_FE_RE^(-1))%*%diff_beta0_hat
 
 
 # 4. Test the statistic 
