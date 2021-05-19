@@ -49,17 +49,20 @@ c_i = rnorm(n,0,1)
 y_it = w_it * delta + c_i + u_it
 
 # Set the clusters i:
-cluster <- rep(1:number_clusters, times=n/number_clusters, each=n/number_clusters)
+cluster <- as.character(rep(1:number_clusters, times=n/number_clusters, each=n/number_clusters))
 
 # Set the times t:
-time <- rep(1:number_times, times=n/number_times, each=1)
+time <- as.character(rep(1:number_times, times=n/number_times, each=1))
+
+# Cluster names:
+cluster_names <- as.character(rep(1:number_clusters, times=1))
 
 
-
+# Create the dataframe of observations:
 data <- data.frame(y_it = y_it, w_it = w_it, cluster = cluster, time = time)
 
 # We put the data into a panel-dataframe:
-data <- pdata.frame(data, index = index)
+pdata <- pdata.frame(data, index = cluster_names)
 
 
 
