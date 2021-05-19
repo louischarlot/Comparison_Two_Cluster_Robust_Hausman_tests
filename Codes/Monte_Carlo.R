@@ -41,10 +41,12 @@ x_it = rnorm(n,1,1)
 u_it = rnorm(n,0,1)  
 
 # Case 1 : NO correlation Corr(c_i,w_it) != 0 (Respect of RE.1.b)
-c_i = rnorm(n,0,1) 
+
+rep(rnorm(1,0,1), times =10)
+c_i = (rep(1:number_times, times=n/number_times, each=n/number_clusters)) 
 
 # Case 2: correlation Corr(c_i,w_it) = 0 (Failure of RE.1.b)
-
+c_i = rnorm(n,0,1)  + 
 
 y_it = x_it * delta + c_i + u_it
 
