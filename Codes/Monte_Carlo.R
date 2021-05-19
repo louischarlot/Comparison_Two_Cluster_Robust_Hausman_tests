@@ -12,6 +12,7 @@
 #########################################################################################################
 #########################################################################################################
 
+rm(list=ls()) 		# Clear workspace
 
 #install.packages("plm")
 library (plm)
@@ -21,7 +22,8 @@ library (plm)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
-
+# Load the 2 METHODS
+source("Code_methode_1.R")
 
 
 
@@ -163,7 +165,7 @@ for (it in 1:num) {
 
 
 
-# Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b)  : chisq = 1.0029, df = 1, p-value = 0.3166
+# Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b)  
 
 
 # Case 2 :  correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b) 
