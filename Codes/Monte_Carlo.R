@@ -37,7 +37,7 @@ number_clusters = 10        # Set the number of clusters
 number_times = 10
 
 delta = 5
-w_it = rnorm(n,1,1) 
+x_it = rnorm(n,1,1) 
 u_it = rnorm(n,0,1)  
 
 # Case 1 : NO correlation Corr(c_i,w_it) != 0 (Respect of RE.1.b)
@@ -46,7 +46,7 @@ c_i = rnorm(n,0,1)
 # Case 2: correlation Corr(c_i,w_it) = 0 (Failure of RE.1.b)
 
 
-y_it = w_it * delta + c_i + u_it
+y_it = x_it * delta + c_i + u_it
 
 # Set the clusters i:
 cluster <- as.character(rep(1:number_clusters, times=n/number_clusters, each=n/number_clusters))
@@ -59,10 +59,10 @@ cluster_names <- as.character(rep(1:number_clusters, times=1))
 
 
 # Create the dataframe of observations:
-data <- data.frame(y_it = y_it, w_it = w_it, cluster = cluster, time = time)
+data0 <- data.frame(y_it = y_it, x_it = x_it, cluster = cluster, time = time)
 
 # We put the data into a panel-dataframe:
-pdata <- pdata.frame(data, index = cluster_names)
+data <- pdata.frame(data0, index = c("cluster", "time"))
 
 
 
@@ -74,8 +74,8 @@ pdata <- pdata.frame(data, index = cluster_names)
 
 
 
-data$lcarpcap.mean <- ave(data$lcarpcap, data$country)
-NUMBER_MEAN_VARIABLES <- 3
+data$w_i <- ave(data$x_it, data$cluster)
+NUMBER_MEAN_VARIABLES <- 1
 
 # Variance for Robust Wald statistic:
 vcov_chosen <- vcovHC # CHECK BETTER !!!!!!!!!!!!
