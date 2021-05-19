@@ -12,10 +12,19 @@
 #########################################################################################################
 #########################################################################################################
 
+
+#install.packages("plm")
+library (plm)
+
+
 # Set working directory 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-rm(list=ls()) 		  # Clear workspace
+
+
+
+
+
 
 set.seed(1) 		    # Set seed for random number generator
 
@@ -81,9 +90,9 @@ w_i <- data_to_determine_wi$w_i
 ###########################################################################################################
 
 # There is correlation with the averages w_i (of x_it): 
-c_i = rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)  + 0.5 * w_i
+c_i = 0.01 * rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)  +  0.99* w_i
 
-  
+
   
   
   
@@ -104,12 +113,12 @@ data <- pdata.frame(data0, index = c("cluster","time"))
 
 #########################################################################################################
 #########################################################################################################
-# METHOD 1 :         
+# MONTE-CARLO METHOD 1 :         
 #########################################################################################################
 #########################################################################################################
 
-
-
+# Variance for Robust Wald statistic:
+vcov_chosen <- vcovHC # CHECK BETTER !!!!!!!!!!!!
 
 # w_i is the meab of x_it in each cluster i:
 data$w_i <- ave(data$x_it, data$cluster)
@@ -117,65 +126,37 @@ NUMBER_MEAN_VARIABLES <- 1
 
 
 
-# Variance for Robust Wald statistic:
-vcov_chosen <- vcovHC # CHECK BETTER !!!!!!!!!!!!
+
+Method_1(y_it,x_it,w_i,data, vcov_chosen, NUMBER_MEAN_VARIABLES)
+
+
+
+# chisq = 16.913, df = 1, p-value = 3.914e-05
 
 
 
 
 
-# We run the pooled regression proposed by (Wooldridge, 2010): y_it = beta*x_it + chi*w_i + (a_i + u_it):
-auxfm <- y_it ~ x_it + w_i
-auxmod <- plm(formula = auxfm, data = data, model = "pooling") 
 
-# Number of "mean" variables (in our example: lincomep.mean, lrpmg.mean and lcarpcap.mean)
-nvars <- NUMBER_MEAN_VARIABLES
-# Identity matrix of dimension = (nvars x nvars)
-Id <- diag(1, nvars)
-# Vector of zeros of dimension = nvars
-Zeros <- rep(0, nvars) # here just for clarity of illustration
-
-# Covariance matrix for the auxiliary regression for the "mean" variables (in our example: lincomep.mean, lrpmg.mean and lcarpcap.mean):
-# => IT CAN (AND IN OUR CASE SHOULD) BE ROBUSTIFIED !!!
-Covariance_mean <- vcov_chosen(auxmod)[(nvars+2):(nvars*2+1),
-                                       (nvars+2):(nvars*2+1)]
-
-# Operation that finally gives the coefficients of the "mean" variables in the auxiliary regression in the right form
-# (in our example: lincomep.mean, lrpmg.mean and lcarpcap.mean) 
-Estimates_mean <- Id %*% coef(auxmod)[(nvars+2):(nvars*2+1)] - Zeros
-
-
-# We calculate our Cluster-Robust Wald statistic => SO HERE IT IS: t(Estimates_mean) %*% (Covariance_mean)^(-1) %*% Estimates_mean
-# "crossprod(A,B)" is the cross-product of matrices A and B gives t(A) %*% B.
-# "solve(a,b)" will solve the equation a %*% x = b for x, where b can be either a vector or a matrix.
-Wald_stat <- as.numeric(crossprod(Estimates_mean, solve(Covariance_mean, Estimates_mean)))
-
-# We calculate the p-value of our Cluster-Robust Hausman test:
-# "pchisq" gives the probability that a chi2(df) > Haussman_stat (with df number of degrees of freedom) => CHECK ONCE AGAIN !!!!
-pWald <- pchisq(Wald_stat, df = nvars, lower.tail = FALSE)
-
-# We name "df" the degrees of freedom and "chisq" the calculated chi-squared:
-df <- nvars
-names(df) <- "df"
-names(Wald_stat) <- "chisq"
-
-# If "vcov" function is not the default one, we display which one it is in our final result: => NE MARCHE PAS MAIS PAS TRÈS GRAVE !!!!!!!!!!!!!!
-if (!is.null(vcov)) {
-  vcov_chosen <- paste(", vcov: ",
-                       paste(deparse(substitute(vcov_chosen))),
-                       sep="")
+for (it in 1:num) {
+  # Data generating process
+  x = rnorm(n,1,1) 
+  sigma_epsilon = sqrt(x^2*sigma2_beta + sigma2_u)
+  epsilon = rnorm(n,0,1)*sigma_epsilon
+  y = x * beta + epsilon
+  y[y<0] <- 0
+  
+  result <- optim(par = theta_start, RC_l, y = y, x = x, method = c("L-BFGS-B"), lower = c(-Inf,0,0.1), upper = c(Inf,Inf,Inf), hessian=TRUE)
+  theta_hat = result$par
+  
+  
+  # For the HISTOGRAM ##############################################################
+  
+  
 }
 
-# We display the results of our Cluster-Robust Hausman test:
-haus_robust <- list(statistic   = Wald_stat,
-                    p.value     = pWald,
-                    parameter   = df,
-                    method      = paste("Regression-based Hausman test", vcov_chosen, sep=""),
-                    alternative = "one model is inconsistent",
-                    data.name   = paste(deparse(substitute(x))))
-class(haus_robust) <- "htest"
-haus_robust
-haus_robust$statistic
+
+
 
 
 
@@ -186,6 +167,10 @@ haus_robust$statistic
 
 
 # Case 2 :  correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b) 
+
+
+
+
 
 
 
