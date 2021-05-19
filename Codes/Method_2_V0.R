@@ -106,7 +106,7 @@ for (b in 1:B) {
 # re coefficients include time varying intercept while fe does not 
 # to have the same vector size, drop the intercept
 beta_0_re <- beta_0_re[2:4]
-beta_re_boot<-beta_re_boot[1:399,2:4]
+beta_re_boot<-beta_re_boot[1:B,2:4]
 
 
 # 3. Create the haussman statistic 
@@ -116,8 +116,8 @@ beta_re_boot<-beta_re_boot[1:399,2:4]
 betahat_bar_FE = 1/B*colSums(beta_fe_boot)
 beta_fe_boot_demeaned <- sweep(beta_fe_boot, 2, betahat_bar_FE, "-")
 
-list0_FE <- lapply(1:399, matrix, data=c(0,0,0,0,0,0,0,0,0), nrow=3, ncol=3)
-for (i in 1:399){
+list0_FE <- lapply(1:B, matrix, data=c(0,0,0,0,0,0,0,0,0), nrow=3, ncol=3)
+for (i in 1:B){
   list0_FE[[i]] <- beta_fe_boot_demeaned[i,]%*%t(beta_fe_boot_demeaned[i,])
 }
 sum_mat_fe <- Reduce("+", list0_FE)
@@ -128,8 +128,8 @@ varhat_betahat_FE <- 1/(B-1)*sum_mat_fe
 betahat_bar_RE = 1/B*colSums(beta_re_boot)
 beta_re_boot_demeaned <- sweep(beta_re_boot, 2, betahat_bar_RE, "-")
 
-list0_RE <- lapply(1:399, matrix, data=c(0,0,0,0,0,0,0,0,0), nrow=3, ncol=3)
-for (i in 1:399){
+list0_RE <- lapply(1:B, matrix, data=c(0,0,0,0,0,0,0,0,0), nrow=3, ncol=3)
+for (i in 1:B){
   list0_RE[[i]] <- beta_re_boot_demeaned[i,]%*%t(beta_re_boot_demeaned[i,])
 }
 sum_mat_re <- Reduce("+", list0_RE)
