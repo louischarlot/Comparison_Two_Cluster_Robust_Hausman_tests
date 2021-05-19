@@ -59,8 +59,8 @@ cluster_names <- paste(cluster_names, "cluster", sep=".")
 
 
 
-# w_i is the meab of x_it in each cluster i:
-data_to_determine_wi <- data.frame(x_i, cluster)
+# w_i is the meab of x_it in each cluster i: 
+data_to_determine_wi <- data.frame(x_it, cluster)
 
 data_to_determine_wi$w_i <- ave(data_to_determine_wi$x_it, data_to_determine_wi$cluster)
 w_i <- data_to_determine_wi$w_i
