@@ -25,14 +25,26 @@ source("Code_methode_1.R")
 set.seed(1) 		    # Set seed for random number generator
 
 
+
+#########################################################################################################
+# CHOOSE CORRELATION OR NOT  :         
+#########################################################################################################
+
+CORRELATION <- "YES"
+#CORRELATION <- "NO"
+
+
+
+
 #########################################################################################################
 #########################################################################################################
 # SETTINGS FOR  DGP :         
 #########################################################################################################
 #########################################################################################################
-n = 100      			  # Set the sample size
-number_clusters = 10        # Set the number of clusters
+
+number_clusters = 100        # Set the number of clusters
 number_times = 10
+n = number_clusters*number_times      # The sample size
 
 delta = 5
 
@@ -88,19 +100,27 @@ for (it in 1:num) {
   data_to_determine_wi$w_i <- ave(data_to_determine_wi$x_it, data_to_determine_wi$cluster)
   w_i <- data_to_determine_wi$w_i
   
-  ###########################################################################################################
-  # Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b) #########################################
-  ###########################################################################################################
-  # Same c_i (taken randomly) within a cluster:
-  c_i = rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)
-  ###########################################################################################################
   
-  ###########################################################################################################
-  # Case 2: correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b)  #############################################
-  ###########################################################################################################
-  # There is correlation with the averages w_i (of x_it): 
-  #c_i = 0.01 * rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)  +  0.99* w_i
-  ###########################################################################################################
+  
+  
+  if(CORRELATION == "NO"){
+    ###########################################################################################################
+    # Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b) #########################################
+    ###########################################################################################################
+    # Same c_i (taken randomly) within a cluster:
+    c_i = rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)
+    ###########################################################################################################
+  }
+  
+  if(CORRELATION == "YES"){
+    ###########################################################################################################
+    # Case 2: correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b)  #############################################
+    ###########################################################################################################
+    # There is correlation with the averages w_i (of x_it): 
+    c_i = 0.01 * rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)  +  0.99* w_i
+    ###########################################################################################################
+  }
+  
   
   y_it = x_it * delta + c_i + u_it
   
@@ -139,17 +159,30 @@ Hausman_stat_method_1_sum/num
 
 # num = 1000 Monte-Carlo iterations:
 
-# Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b)  
+## WITH n = 100: ######################################
 
+# Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b)  
 # p_value_method_1_sum/num : 0.4095053
 # Hausman_stat_method_1_sum/num :  2.653513
-
-
 
 # Case 2 :  correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b) 
 
 # p_value_method_1_sum/num : 0.053638
 # Hausman_stat_method_1_sum/num :  19.86939 
+
+
+## WITH n = 1000: (EN AUGMENTANT number_clusters à 100 !!!!) #####################################
+
+# Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b)  
+# p_value_method_1_sum/num : 0.4735966
+# Hausman_stat_method_1_sum/num :  1.127013 
+
+# Case 2 :  correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b) 
+
+# p_value_method_1_sum/num : 5.008504e-11
+# Hausman_stat_method_1_sum/num :  94.89613  
+
+
 
 
 
