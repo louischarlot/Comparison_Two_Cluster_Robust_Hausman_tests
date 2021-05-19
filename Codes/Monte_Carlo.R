@@ -92,14 +92,14 @@ for (it in 1:num) {
   # Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b) #########################################
   ###########################################################################################################
   # Same c_i (taken randomly) within a cluster:
-  # c_i = rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)
+  c_i = rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)
   ###########################################################################################################
   
   ###########################################################################################################
   # Case 2: correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b)  #############################################
   ###########################################################################################################
   # There is correlation with the averages w_i (of x_it): 
-  c_i = 0.01 * rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)  +  0.99* w_i
+  #c_i = 0.01 * rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)  +  0.99* w_i
   ###########################################################################################################
   
   y_it = x_it * delta + c_i + u_it
@@ -137,14 +137,19 @@ Hausman_stat_method_1_sum/num
 
 
 
-
+# num = 1000 Monte-Carlo iterations:
 
 # Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b)  
+
+# p_value_method_1_sum/num : 0.4095053
+# Hausman_stat_method_1_sum/num :  2.653513
+
 
 
 # Case 2 :  correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b) 
 
-
+# p_value_method_1_sum/num : 0.053638
+# Hausman_stat_method_1_sum/num :  19.86939 
 
 
 
