@@ -40,16 +40,6 @@ delta = 5
 x_it = rnorm(n,1,1) 
 u_it = rnorm(n,0,1)  
 
-# Case 1 : NO correlation Corr(c_i,w_it) != 0 (Respect of RE.1.b)
-
-rep(rnorm(1,0,1), times =10)
-c_i = (rep(1:number_times, times=n/number_times, each=n/number_clusters)) 
-
-# Case 2: correlation Corr(c_i,w_it) = 0 (Failure of RE.1.b)
-c_i = rnorm(n,0,1)  + 
-
-y_it = x_it * delta + c_i + u_it
-
 # Set the clusters i:
 cluster <- as.character(rep(1:number_clusters, times=n/number_clusters, each=n/number_clusters))
 
@@ -58,6 +48,31 @@ time <- as.character(rep(1:number_times, times=n/number_times, each=1))
 
 # Cluster names:
 cluster_names <- as.character(rep(1:number_clusters, times=1))
+
+
+###########################################################################################################
+# Case 1 : NO correlation Corr(c_i,w_it) != 0 (Respect of RE.1.b) #########################################
+###########################################################################################################
+
+# Same c_i (taken randomly) within a cluster:
+c_i = rep(rnorm(number_clusters,0,1), times=n/number_times, each=n/number_clusters)
+
+###########################################################################################################
+# Case 2: correlation Corr(c_i,w_it) = 0 (Failure of RE.1.b)  #############################################
+###########################################################################################################
+
+
+#c_i = rnorm(n,0,1)  + 
+
+  
+  
+  
+  
+  
+y_it = x_it * delta + c_i + u_it
+
+
+
 
 
 # Create the dataframe of observations:
