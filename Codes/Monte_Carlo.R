@@ -32,7 +32,7 @@ set.seed(1) 		    # Set seed for random number generator
 #########################################################################################################
 #########################################################################################################
 
-n = 1000      			  # Set the sample size
+n = 100      			  # Set the sample size
 number_clusters = 10        # Set the number of clusters
 number_times = 10
 
@@ -40,29 +40,48 @@ delta = 5
 x_it = rnorm(n,1,1) 
 u_it = rnorm(n,0,1)  
 
+
+
+
 # Set the clusters i:
-cluster <- as.character(rep(1:number_clusters, times=n/number_clusters, each=n/number_clusters))
+cluster <- as.character(rep(1:number_clusters, times=1, each=n/number_clusters))
+cluster <- paste(cluster, "cluster", sep=".")
 
 # Set the times t:
 time <- as.character(rep(1:number_times, times=n/number_times, each=1))
+time <- paste(time, "time", sep=".")
 
 # Cluster names:
 cluster_names <- as.character(rep(1:number_clusters, times=1))
+cluster_names <- paste(cluster_names, "cluster", sep=".")
+
+
+
+
+
+# w_i is the meab of x_it in each cluster i:
+data_to_determine_wi <- data.frame(x_i, cluster)
+
+data_to_determine_wi$w_i <- ave(data_to_determine_wi$x_it, data_to_determine_wi$cluster)
+w_i <- data_to_determine_wi$w_i
+
+
+
 
 
 ###########################################################################################################
-# Case 1 : NO correlation Corr(c_i,w_it) != 0 (Respect of RE.1.b) #########################################
+# Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b) #########################################
 ###########################################################################################################
 
 # Same c_i (taken randomly) within a cluster:
-c_i = rep(rnorm(number_clusters,0,1), times=n/number_times, each=n/number_clusters)
+c_i = rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)
 
 ###########################################################################################################
-# Case 2: correlation Corr(c_i,w_it) = 0 (Failure of RE.1.b)  #############################################
+# Case 2: correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b)  #############################################
 ###########################################################################################################
 
 
-#c_i = rnorm(n,0,1)  + 
+c_i = rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)  + 0.5 * w_i
 
   
   
@@ -79,7 +98,7 @@ y_it = x_it * delta + c_i + u_it
 data0 <- data.frame(y_it = y_it, x_it = x_it, cluster = cluster, time = time)
 
 # We put the data into a panel-dataframe:
-data <- pdata.frame(data0, index = c("cluster", "time"))
+data <- pdata.frame(data0, index = c("cluster","time"))
 
 
 
@@ -91,8 +110,12 @@ data <- pdata.frame(data0, index = c("cluster", "time"))
 
 
 
+
+# w_i is the meab of x_it in each cluster i:
 data$w_i <- ave(data$x_it, data$cluster)
 NUMBER_MEAN_VARIABLES <- 1
+
+
 
 # Variance for Robust Wald statistic:
 vcov_chosen <- vcovHC # CHECK BETTER !!!!!!!!!!!!
@@ -159,7 +182,10 @@ haus_robust$statistic
 
 
 
+# Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b)  : chisq = 1.0029, df = 1, p-value = 0.3166
 
+
+ 
 
 
 
