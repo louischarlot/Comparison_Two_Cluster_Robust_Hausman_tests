@@ -74,13 +74,13 @@ w_i <- data_to_determine_wi$w_i
 ###########################################################################################################
 
 # Same c_i (taken randomly) within a cluster:
-c_i = rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)
+# c_i = rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)
 
 ###########################################################################################################
 # Case 2: correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b)  #############################################
 ###########################################################################################################
 
-
+# There is correlation with the averages w_i (of x_it): 
 c_i = rep(rnorm(number_clusters,0,1), times=1, each=n/number_clusters)  + 0.5 * w_i
 
   
@@ -185,7 +185,7 @@ haus_robust$statistic
 # Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b)  : chisq = 1.0029, df = 1, p-value = 0.3166
 
 
- 
+# Case 2 :  correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b) 
 
 
 
