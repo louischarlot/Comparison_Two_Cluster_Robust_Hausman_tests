@@ -102,7 +102,7 @@ vcov_chosen <- vcovHC # CHECK BETTER !!!!!!!!!!!!
 
 
 # We run the pooled regression proposed by (Wooldridge, 2010): y_it = beta*x_it + chi*w_i + (a_i + u_it):
-auxfm <- lgaspcar ~ lincomep + lrpmg + lcarpcap + lincomep.mean + lrpmg.mean + lcarpcap.mean
+auxfm <- y_it ~ x_it + w_i
 auxmod <- plm(formula = auxfm, data = data, model = "pooling") 
 
 # Number of "mean" variables (in our example: lincomep.mean, lrpmg.mean and lcarpcap.mean)
