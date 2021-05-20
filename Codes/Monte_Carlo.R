@@ -275,64 +275,15 @@ number_times_p_value_method_2_inf_001/num
 
 ###
 # Case 2 :  correlation Corr(c_i,x_it) != 0 (Failure of RE.1.b) 
-# p_value_method_1_sum/num                      XXX
-# Hausman_stat_method_1_sum/num                 XXX 
-# number_times_p_value_method_1_inf_005/num     XXX
-# number_times_p_value_method_1_inf_001/num     XXX
+# p_value_method_1_sum/num                      0.04652651
+# Hausman_stat_method_1_sum/num                 20.36881 
+# number_times_p_value_method_1_inf_005/num     0.84
+# number_times_p_value_method_1_inf_001/num     0.76
 
-# p_value_method_2_sum/num                      XXX
-# Hausman_stat_method_2_sum/num                 XXX
-# number_times_p_value_method_2_inf_005/num     XXX
-# number_times_p_value_method_2_inf_001/num     XXX
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#############
-# n=1000  (EN AUGMENTANT number_clusters à 100 !!!!), B=399, num = 5
-
-###
-# Case 2 :  correlation Corr(c_i,x_it) != 0 (Failure of RE.1.b) 
-# p_value_method_1_sum/num         3.918694e-13
-# Hausman_stat_method_1_sum/num    66.90031
-
-# p_value_method_2_sum/num          2.855299e-06
-# Hausman_stat_method_2_sum/num     24.48773
-
-### 
-# Case 1 : NO correlation Corr(c_i,x_it) = 0 (Respect of RE.1.b)  
-# p_value_method_1_sum/num         0.3064052
-# Hausman_stat_method_1_sum/num    2.033738 
-
-# p_value_method_2_sum/num          0.368492
-# Hausman_stat_method_2_sum/num     1.249217
-
+# p_value_method_2_sum/num                      0.1065866
+# Hausman_stat_method_2_sum/num                 5.08248
+# number_times_p_value_method_2_inf_005/num     0.58
+# number_times_p_value_method_2_inf_001/num     0.32
 
 
 
