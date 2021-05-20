@@ -44,8 +44,9 @@ set.seed(1) 		    # Set seed for random number generator
 # CHOOSE CORRELATION OR NOT  :         
 #########################################################################################################
 
-#CORRELATION <- "YES"
-CORRELATION <- "NO"
+CORRELATION <- "NO"             # Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of Assumption RE.1.b of Wooldridge (2010)) 
+#CORRELATION <- "YES"           # Case 2: correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b)
+
 
 
 
@@ -56,14 +57,14 @@ CORRELATION <- "NO"
 #########################################################################################################
 #########################################################################################################
 
-number_clusters = 100        # Set the number of clusters
+number_clusters = 10        # Set the number of clusters
 number_times = 10
 n = number_clusters*number_times      # The sample size
 
 
 B = 399 # Set number of bootstrap iterations
 
-num = 5			# Number of Monte Carlo iterations
+num = 50			# Number of Monte Carlo iterations
 
 delta = 5
 
@@ -90,12 +91,16 @@ vcov_chosen <- vcovHC # CHECK BETTER !!!!!!!!!!!!
 
 #Initialise !!!!!!!!!!!!!!!!
 p_value_method_1_sum = 0
-Hausman_stat_method_1_sum = 0
 p_value_method_2_sum = 0
+Hausman_stat_method_1_sum = 0
 Hausman_stat_method_2_sum = 0
+number_times_p_value_method_1_inf_005 = 0
+number_times_p_value_method_2_inf_005 = 0
+number_times_p_value_method_1_inf_001 = 0
+number_times_p_value_method_2_inf_001 = 0
 
 
-for (it in 1:num) {
+for (iter in 1:num) {
   
   
   #########################################################################################################
@@ -167,6 +172,13 @@ for (it in 1:num) {
   p_value_method_1_sum = p_value_method_1_sum + M1$p.value
   Hausman_stat_method_1_sum = Hausman_stat_method_1_sum + M1$statistic
   
+  if(M1$p.value < 0.05){
+    number_times_p_value_method_1_inf_005 = number_times_p_value_method_1_inf_005 + 1
+  }
+  if(M1$p.value < 0.01){
+    number_times_p_value_method_1_inf_001 = number_times_p_value_method_1_inf_001 + 1
+  }
+  
   
   
   #########################################################################################################
@@ -177,16 +189,123 @@ for (it in 1:num) {
   p_value_method_2_sum = p_value_method_2_sum + M2[1]
   Hausman_stat_method_2_sum = Hausman_stat_method_2_sum + M2[2]
   
+  if(M2[1] < 0.05){
+    number_times_p_value_method_2_inf_005 = number_times_p_value_method_2_inf_005 + 1
+  }
+  
+  if(M2[1] < 0.01){
+    number_times_p_value_method_2_inf_001 = number_times_p_value_method_2_inf_001 + 1
+  }
+  
+  
 }
+
+# Results for method 1:
 
 p_value_method_1_sum/num
 
 Hausman_stat_method_1_sum/num
 
+number_times_p_value_method_1_inf_005/num
+
+number_times_p_value_method_1_inf_001/num
+
+
+# Results for method 2:
 
 p_value_method_2_sum/num
 
 Hausman_stat_method_2_sum/num
+
+number_times_p_value_method_2_inf_005/num
+
+number_times_p_value_method_2_inf_001/num
+
+
+
+
+#############
+# n=1000  (WITH number_clusters = 100 and number_times = 10), B=399, num = 50
+
+### 
+# Case 1 : NO correlation Corr(c_i,x_it) = 0 (Respect of RE.1.b)  
+# p_value_method_1_sum/num                      0.4664159
+# Hausman_stat_method_1_sum/num                 1.453387 
+# number_times_p_value_method_1_inf_005/num     0.14
+# number_times_p_value_method_1_inf_001/num     0.04
+
+# p_value_method_2_sum/num                      0.4930527
+# Hausman_stat_method_2_sum/num                 1.086238
+# number_times_p_value_method_2_inf_005/num     0.08
+# number_times_p_value_method_2_inf_001/num     0.02
+
+###
+# Case 2 :  correlation Corr(c_i,x_it) != 0 (Failure of RE.1.b) 
+# p_value_method_1_sum/num                      1.732134e-10
+# Hausman_stat_method_1_sum/num                 91.66104 
+# number_times_p_value_method_1_inf_005/num     1
+# number_times_p_value_method_1_inf_001/num     1
+
+# p_value_method_2_sum/num                      1.640855e-05
+# Hausman_stat_method_2_sum/num                 33.11566
+# number_times_p_value_method_2_inf_005/num     1
+# number_times_p_value_method_2_inf_001/num     1
+
+
+
+
+
+#############
+# n=100  (WITH number_clusters = 10 and number_times = 10), B=399, num = 50
+### 
+# Case 1 : NO correlation Corr(c_i,x_it) = 0 (Respect of RE.1.b)  
+# p_value_method_1_sum/num                      XXX
+# Hausman_stat_method_1_sum/num                 XXX 
+# number_times_p_value_method_1_inf_005/num     XXX
+# number_times_p_value_method_1_inf_001/num     XXX
+
+# p_value_method_2_sum/num                      XXX
+# Hausman_stat_method_2_sum/num                 XXX
+# number_times_p_value_method_2_inf_005/num     XXX
+# number_times_p_value_method_2_inf_001/num     XXX
+
+###
+# Case 2 :  correlation Corr(c_i,x_it) != 0 (Failure of RE.1.b) 
+# p_value_method_1_sum/num                      XXX
+# Hausman_stat_method_1_sum/num                 XXX 
+# number_times_p_value_method_1_inf_005/num     XXX
+# number_times_p_value_method_1_inf_001/num     XXX
+
+# p_value_method_2_sum/num                      XXX
+# Hausman_stat_method_2_sum/num                 XXX
+# number_times_p_value_method_2_inf_005/num     XXX
+# number_times_p_value_method_2_inf_001/num     XXX
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
