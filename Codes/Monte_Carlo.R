@@ -48,8 +48,8 @@ set.seed(1) 		    # Set seed for random number generator
 # CHOOSE CORRELATION OR NOT  :         
 #########################################################################################################
 
-CORRELATION <- "NO"             # Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of Assumption RE.1.b of Wooldridge (2010)) 
-#CORRELATION <- "YES"           # Case 2: correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b)
+#CORRELATION <- "NO"             # Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of Assumption RE.1.b of Wooldridge (2010)) 
+CORRELATION <- "YES"           # Case 2: correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b)
 
 
 
@@ -263,15 +263,15 @@ number_times_p_value_method_2_inf_001/num
 # n=100  (WITH number_clusters = 10 and number_times = 10), B=399, num = 50
 ### 
 # Case 1 : NO correlation Corr(c_i,x_it) = 0 (Respect of RE.1.b)  
-# p_value_method_1_sum/num                      XXX
-# Hausman_stat_method_1_sum/num                 XXX 
-# number_times_p_value_method_1_inf_005/num     XXX
-# number_times_p_value_method_1_inf_001/num     XXX
+# p_value_method_1_sum/num                      0.3955996
+# Hausman_stat_method_1_sum/num                 2.753435  
+# number_times_p_value_method_1_inf_005/num     0.18
+# number_times_p_value_method_1_inf_001/num     0.12
 
-# p_value_method_2_sum/num                      XXX
-# Hausman_stat_method_2_sum/num                 XXX
-# number_times_p_value_method_2_inf_005/num     XXX
-# number_times_p_value_method_2_inf_001/num     XXX
+# p_value_method_2_sum/num                      0.7279315
+# Hausman_stat_method_2_sum/num                 0.2181224
+# number_times_p_value_method_2_inf_005/num     0
+# number_times_p_value_method_2_inf_001/num     0
 
 ###
 # Case 2 :  correlation Corr(c_i,x_it) != 0 (Failure of RE.1.b) 
