@@ -105,6 +105,7 @@ Method_2 <- function (y_it,x_it,data, B) {
   # we sum the elements:
   sum_mat_fe <- Reduce("+", list0_FE)
   
+  # We finally have the V_hat_FE using the formula in Cameron and Miller (2015)
   varhat_betahat_FE <- 1/(B-1)*sum_mat_fe
   
   # Calculate V_hat_RE similarly 
