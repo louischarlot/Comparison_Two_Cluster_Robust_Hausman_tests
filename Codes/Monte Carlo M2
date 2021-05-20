@@ -78,8 +78,9 @@ for (it in 1:num) {
   u_it = rnorm(n,0,1)  
   
   # Set the clusters i:
-  cluster <- as.character(rep(1:number_clusters, times=1, each=n/number_clusters))
-  cluster <- paste(cluster, "cluster", sep=".")
+  cluster <- rep(1:number_clusters, times=1, each=n/number_clusters)
+  #cluster <- as.character(rep(1:number_clusters, times=1, each=n/number_clusters))
+  #cluster <- paste(cluster, "cluster", sep=".")
   
   # Set the times t:
   time <- as.character(rep(1:number_times, times=n/number_times, each=1))
@@ -156,11 +157,12 @@ for (it in 1:num) {
     ### a) resample ? => PROPOSITION RACHEL
     
     # get a vector with all clusters
-    c <- sort(unique(data$cluster))
+    c <- sort(unique(data0$cluster))
+   # c <- as.character(c)
     
     # group the data points per cluster
     clust.group <- function(c) {
-      data[data$cluster==c,]             #### là ça ne fonctionne plus
+      data0[data0$cluster==c,]             #### là ça ne fonctionne plus
     }
     
     clust.list <- lapply(c,clust.group)  #### et du coup là non plus
@@ -180,20 +182,22 @@ for (it in 1:num) {
     c.boot <- do.call(rbind,lapply(clust.sample,clust.bind)) # c.boot = the new data set (single bootstrap replicate)
     
     # Just to maintain columns name
-    colnames(c.boot) <- names(data)
+    colnames(c.boot) <- names(data0)
     
     ### Here the problem is that in the new sample dataset c.boot, some 'clusters' have been sampled more than once so we need to rename them otherwise plm does not work
     c.boot <- as.data.frame(c.boot)
     c.boot <- c.boot[order(c.boot$cluster),]
     c.boot$cluster <- rep(1:number_clusters, each=number_times) # no more duplicates !
     
+    ### Reorganize order of columns: "cluster" then "time" then "y_it" then "x_it" and transform y_it and x_it into numbers (because they became characters!)
+    c.boot.ordered <- data.frame(cluster = c.boot$cluster, time = c.boot$time, y_it = as.numeric(c.boot$y_it), x_it = as.numeric(c.boot$x_it))
     
     ### b) FE model   
-    fe_mod <- plm(formula = reg, data = c.boot, model = "within")  
+    fe_mod <- plm(formula = y_it ~ x_it, data = c.boot.ordered, model = "within")  
     beta_fe_boot[b,1:k_fe] <- fe_mod$coefficients
     
     ### c) RE model
-    re_mod <- plm(formula = reg, data = c.boot, model = "random") 
+    re_mod <- plm(formula = reg, data = c.boot.ordered, model = "random") 
     beta_re_boot[b,1:k_re] <- re_mod$coefficients
   }
   
@@ -245,8 +249,9 @@ for (it in 1:num) {
   #generate the p-value of H: 
   p_value_H <- pchisq(H, df=k_fe, lower.tail=FALSE)
   p_value_H
-
+  
 }
+
 
 
 
