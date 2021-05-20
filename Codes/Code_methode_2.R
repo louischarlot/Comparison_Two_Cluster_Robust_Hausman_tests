@@ -88,52 +88,48 @@ Method_2 <- function (y_it,x_it,data, B) {
   beta_re_boot <- as.matrix(beta_re_boot)
   
   
+  
+  # beta_fe_boot- beta_re_boot :
+  beta_fe_minus_re <- beta_fe_boot - beta_re_boot
+  
+  
+  
+  
   # 3. Create the haussman statistic 
-  # we can use that V_hat(FE-RE) = V_hat_FE - V_hat_RE so we first calculate the two V_hat separately
+  # Calculate V_hat using the formula in Cameron and Miller (2015)
   
-  # Calculate V_hat_FE using the formula in Cameron and Miller (2015)
-  betahat_bar_FE = 1/B*colSums(beta_fe_boot)
+  betahat_bar = 1/B*colSums(beta_fe_minus_re)
   # We substract to each element of b the mean over B that we just calculated:
-  beta_fe_boot_demeaned <- sweep(beta_fe_boot, 2, betahat_bar_FE, "-")
+  beta_fe_minus_re_demeaned <- sweep(beta_fe_minus_re, 2, betahat_bar, "-")
   
-  
-  list0_FE <- lapply(1:B, matrix, data=NA, nrow=k_fe, ncol=k_fe)
+  list0 <- lapply(1:B, matrix, data=NA, nrow=k_fe, ncol=k_fe)
   # we realize the product b*t(b):
   for (i in 1:B){
-    list0_FE[[i]] <- beta_fe_boot_demeaned[i,]%*%t(beta_fe_boot_demeaned[i,])
+    list0[[i]] <- beta_fe_minus_re_demeaned[i,]%*%t(beta_fe_minus_re_demeaned[i,])
   }
   # we sum the elements:
-  sum_mat_fe <- Reduce("+", list0_FE)
+  sum_mat <- Reduce("+", list0)
   
   # We finally have the V_hat_FE using the formula in Cameron and Miller (2015)
-  varhat_betahat_FE <- 1/(B-1)*sum_mat_fe
+  varhat_betahat <- 1/(B-1)*sum_mat
   
-  # Calculate V_hat_RE similarly 
-  betahat_bar_RE = 1/B*colSums(beta_re_boot)
-  beta_re_boot_demeaned <- sweep(beta_re_boot, 2, betahat_bar_RE, "-")
-  
-  list0_RE <- lapply(1:B, matrix, data=NA, nrow=k_re-1, ncol=k_re-1)
-  for (i in 1:B){
-    list0_RE[[i]] <- beta_re_boot_demeaned[i,]%*%t(beta_re_boot_demeaned[i,])
-  }
-  sum_mat_re <- Reduce("+", list0_RE)
-  
-  varhat_betahat_RE <- 1/(B-1)*sum_mat_re
-  
-  # The pairs cluster bootstrap variance is:
-  V_hat_FE_RE = varhat_betahat_FE - varhat_betahat_RE
   
   # We calculate the difference between the estimated coefficients:
   diff_beta0_hat = beta_0_fe - beta_0_re
   
-  ### d) generate the Hausman test statistic => follows a chi-square distribution with 3 degrees of freedom (because 3 coefs estimated)
-  H = t(diff_beta0_hat)%*%(V_hat_FE_RE^(-1))%*%diff_beta0_hat
   
-  # 4. Test the statistic 
+  
+  
+  
+  # d) generate the Hausman test statistic => follows a chi-square distribution with 3 degrees of freedom (because 3 coefs estimated)
+  H = t(diff_beta0_hat)%*%(varhat_betahat^(-1))%*%diff_beta0_hat
+  
+  
+  
+  # 4. Test the statistic
   # we want to compare the H statistic to a Chi-square distribution with 3 degrees of freedom
-  #generate the p-value of H: 
+  # generate the p-value of H:
   p_value_H <- pchisq(H, df=k_fe, lower.tail=FALSE)
-  
   
   
   return(c(p_value_H, H))
