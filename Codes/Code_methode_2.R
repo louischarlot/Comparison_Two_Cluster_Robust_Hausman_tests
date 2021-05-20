@@ -93,12 +93,16 @@ Method_2 <- function (y_it,x_it,data, B) {
   
   # Calculate V_hat_FE using the formula in Cameron and Miller (2015)
   betahat_bar_FE = 1/B*colSums(beta_fe_boot)
+  # We substract to each element of b the mean over B that we just calculated:
   beta_fe_boot_demeaned <- sweep(beta_fe_boot, 2, betahat_bar_FE, "-")
   
+  
   list0_FE <- lapply(1:B, matrix, data=NA, nrow=k_fe, ncol=k_fe)
+  # we realize the product b*t(b):
   for (i in 1:B){
     list0_FE[[i]] <- beta_fe_boot_demeaned[i,]%*%t(beta_fe_boot_demeaned[i,])
   }
+  # we sum the elements:
   sum_mat_fe <- Reduce("+", list0_FE)
   
   varhat_betahat_FE <- 1/(B-1)*sum_mat_fe
