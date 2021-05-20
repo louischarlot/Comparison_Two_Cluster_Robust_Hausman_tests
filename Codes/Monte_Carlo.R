@@ -61,9 +61,9 @@ number_times = 10
 n = number_clusters*number_times      # The sample size
 
 
-B = 199 # Set number of bootstrap iterations
+B = 399 # Set number of bootstrap iterations
 
-num = 100			# Number of Monte Carlo iterations
+num = 50			# Number of Monte Carlo iterations
 
 delta = 5
 
@@ -191,17 +191,48 @@ Hausman_stat_method_2_sum/num
 
 
 
+#############
+# n=1000  (EN AUGMENTANT number_clusters à 100 !!!!), B=199, num = 100
+
+###
+# Case 2 :  correlation Corr(c_i,x_it) != 0 (Failure of RE.1.b) 
+# p_value_method_1_sum/num         1.875934e-11
+# Hausman_stat_method_1_sum/num    98.074 
+
+# p_value_method_2_sum/num          0.69
+# Hausman_stat_method_2_sum/num     793.4516
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### OLD: ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### 
+
 
 
 # num = 1000 Monte-Carlo iterations:
 
 ## WITH n = 100: ######################################
 
-# Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b)  
+# Case 1 : NO correlation Corr(c_i,x_it) = 0 (Respect of RE.1.b)  
 # p_value_method_1_sum/num : 0.4095053
 # Hausman_stat_method_1_sum/num :  2.653513
 
-# Case 2 :  correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b) 
+# Case 2 :  correlation Corr(c_i,x_it) != 0 (Failure of RE.1.b) 
 
 # p_value_method_1_sum/num : 0.053638
 # Hausman_stat_method_1_sum/num :  19.86939 
@@ -209,11 +240,11 @@ Hausman_stat_method_2_sum/num
 
 ## WITH n = 1000: (EN AUGMENTANT number_clusters à 100 !!!!) #####################################
 
-# Case 1 : NO correlation Corr(c_i,x_it) != 0 (Respect of RE.1.b)  
+# Case 1 : NO correlation Corr(c_i,x_it) = 0 (Respect of RE.1.b)  
 # p_value_method_1_sum/num : 0.4735966
 # Hausman_stat_method_1_sum/num :  1.127013 
 
-# Case 2 :  correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b) 
+# Case 2 :  correlation Corr(c_i,x_it) != 0 (Failure of RE.1.b) 
 
 # p_value_method_1_sum/num : 5.008504e-11
 # Hausman_stat_method_1_sum/num :  94.89613  
