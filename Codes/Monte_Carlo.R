@@ -76,7 +76,7 @@ delta = 5
 NUMBER_MEAN_VARIABLES <- 1
 
 # Variance for Robust Wald statistic:
-vcov_chosen <- vcovHC # CHECK BETTER !!!!!!!!!!!!
+vcov_chosen <- vcovHC # Heteroscedasticity-consistent estimation of the covariance matrix of the coefficient estimates in regression models.
 
 
 
@@ -284,13 +284,6 @@ number_times_p_value_method_2_inf_001/num
 # Hausman_stat_method_2_sum/num                 5.08248
 # number_times_p_value_method_2_inf_005/num     0.58
 # number_times_p_value_method_2_inf_001/num     0.32
-
-
-
-
-
-
-
 
 
 
