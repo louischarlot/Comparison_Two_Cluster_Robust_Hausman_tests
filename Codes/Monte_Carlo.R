@@ -1,6 +1,10 @@
 
 
-# Title : Monte-Carlo comparison of 2 methods
+# Title : Monte-Carlo comparison of the 2 methods (Wooldridge (2010) and Miller et Cameron (2015)) of Cluster-Robust 
+#         Hausman test for RE vs FE.
+
+# We realize these 2 tests with CORRELATION = "NO"  or "YES", which means NO correlation Corr(c_i,x_it) != 0 (Respect of Assumption RE.1.b of Wooldridge (2010)) 
+# or correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b).
 
 
 
