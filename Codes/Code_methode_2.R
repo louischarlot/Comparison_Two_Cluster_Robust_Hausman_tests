@@ -1,7 +1,8 @@
-# Dans ce code R, on va essayer de reproduire la 2nde méthode proposé par Miller et Cameron (2015)
-# Cette méthode se décompose en plusieurs étapes: 
-#                         - utilisation du paired cluster bootstrap pour estimer V_hat dans B subsamples
-#                         - Haussman test for RE et FE  
+
+# In this R code, we use the 2nde méthod to calculate tehe Cluster-Robst Hausman test, proposed by Miller et Cameron (2015)
+# This method is divided un many steps: 
+#                         - utilization of paired cluster bootstrap to estimate V_hat in B subsamples
+#                         - Haussman test for RE vs FE  
 
 
 #############################################################################################################
