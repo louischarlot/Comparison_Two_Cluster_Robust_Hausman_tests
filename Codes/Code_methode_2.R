@@ -1,5 +1,5 @@
 
-# In this R code, we use the 2nde méthod to calculate tehe Cluster-Robst Hausman test, proposed by Miller et Cameron (2015)
+# In this R code, we use the 2nde méthod to calculate the Cluster-Robst Hausman test, proposed by Miller et Cameron (2015)
 # This method is divided un many steps: 
 #                         - utilization of paired cluster bootstrap to estimate V_hat in B subsamples
 #                         - Haussman test for RE vs FE  
