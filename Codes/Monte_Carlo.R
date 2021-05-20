@@ -14,13 +14,27 @@
 rm(list=ls()) 		# Clear workspace
 
 #install.packages("plm")
-library (plm)
+#install.packages("rsample")
+#install.packages("survey")
+#install.packages("sandwich")
+#install.packages("BBmisc")
+#install.packages("purrr")
+
+library(plm)
+library(rsample)
+library(survey)
+library(sandwich)
+library(BBmisc)
+library(purrr)
+
 
 # Set working directory 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # Load the 2 METHODS
 source("Code_methode_1.R")
+source("Code_methode_2.R")
+
 
 set.seed(1) 		    # Set seed for random number generator
 
@@ -46,6 +60,11 @@ number_clusters = 100        # Set the number of clusters
 number_times = 10
 n = number_clusters*number_times      # The sample size
 
+
+B = 199 # Set number of bootstrap iterations
+
+num = 100			# Number of Monte Carlo iterations
+
 delta = 5
 
 # Number of w_it variables:
@@ -66,7 +85,7 @@ vcov_chosen <- vcovHC # CHECK BETTER !!!!!!!!!!!!
 #########################################################################################################
 #########################################################################################################
 
-num = 1000			# Number of Monte Carlo iterations
+
 
 
 #Initialise !!!!!!!!!!!!!!!!
@@ -84,8 +103,9 @@ for (it in 1:num) {
   u_it = rnorm(n,0,1)  
   
   # Set the clusters i:
-  cluster <- as.character(rep(1:number_clusters, times=1, each=n/number_clusters))
-  cluster <- paste(cluster, "cluster", sep=".")
+  cluster <- rep(1:number_clusters, times=1, each=n/number_clusters)
+  #cluster <- as.character(rep(1:number_clusters, times=1, each=n/number_clusters))
+  #cluster <- paste(cluster, "cluster", sep=".")
   
   # Set the times t:
   time <- as.character(rep(1:number_times, times=n/number_times, each=1))
@@ -142,15 +162,29 @@ for (it in 1:num) {
   #########################################################################################################
   M1 <- Method_1(y_it,x_it,w_i,data, vcov_chosen, NUMBER_MEAN_VARIABLES)
   
-  
   p_value_method_1_sum = p_value_method_1_sum + M1$p.value
   Hausman_stat_method_1_sum = Hausman_stat_method_1_sum + M1$statistic
+  
+  
+  
+  #########################################################################################################
+  # Method 2:         
+  #########################################################################################################
+  M2 <- Method_2(y_it,x_it,data, B)
+  
+  p_value_method_2_sum = p_value_method_2_sum + M2[1]
+  Hausman_stat_method_2_sum = Hausman_stat_method_2_sum + M2[2]
   
 }
 
 p_value_method_1_sum/num
 
 Hausman_stat_method_1_sum/num
+
+
+p_value_method_2_sum/num
+
+Hausman_stat_method_2_sum/num
 
 
 
