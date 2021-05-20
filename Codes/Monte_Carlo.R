@@ -91,6 +91,8 @@ vcov_chosen <- vcovHC # CHECK BETTER !!!!!!!!!!!!
 #Initialise !!!!!!!!!!!!!!!!
 p_value_method_1_sum = 0
 Hausman_stat_method_1_sum = 0
+p_value_method_2_sum = 0
+Hausman_stat_method_2_sum = 0
 
 
 for (it in 1:num) {
