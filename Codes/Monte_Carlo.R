@@ -44,8 +44,8 @@ set.seed(1) 		    # Set seed for random number generator
 # CHOOSE CORRELATION OR NOT  :         
 #########################################################################################################
 
-CORRELATION <- "YES"
-#CORRELATION <- "NO"
+#CORRELATION <- "YES"
+CORRELATION <- "NO"
 
 
 
@@ -63,7 +63,7 @@ n = number_clusters*number_times      # The sample size
 
 B = 399 # Set number of bootstrap iterations
 
-num = 50			# Number of Monte Carlo iterations
+num = 5			# Number of Monte Carlo iterations
 
 delta = 5
 
@@ -192,62 +192,25 @@ Hausman_stat_method_2_sum/num
 
 
 #############
-# n=1000  (EN AUGMENTANT number_clusters à 100 !!!!), B=199, num = 100
+# n=1000  (EN AUGMENTANT number_clusters à 100 !!!!), B=399, num = 5
 
 ###
 # Case 2 :  correlation Corr(c_i,x_it) != 0 (Failure of RE.1.b) 
-# p_value_method_1_sum/num         1.875934e-11
-# Hausman_stat_method_1_sum/num    98.074 
+# p_value_method_1_sum/num         3.918694e-13
+# Hausman_stat_method_1_sum/num    66.90031
 
-# p_value_method_2_sum/num          0.69
-# Hausman_stat_method_2_sum/num     793.4516
+# p_value_method_2_sum/num          2.855299e-06
+# Hausman_stat_method_2_sum/num     24.48773
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### OLD: ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### 
-
-
-
-# num = 1000 Monte-Carlo iterations:
-
-## WITH n = 100: ######################################
-
+### 
 # Case 1 : NO correlation Corr(c_i,x_it) = 0 (Respect of RE.1.b)  
-# p_value_method_1_sum/num : 0.4095053
-# Hausman_stat_method_1_sum/num :  2.653513
+# p_value_method_1_sum/num         0.3064052
+# Hausman_stat_method_1_sum/num    2.033738 
 
-# Case 2 :  correlation Corr(c_i,x_it) != 0 (Failure of RE.1.b) 
-
-# p_value_method_1_sum/num : 0.053638
-# Hausman_stat_method_1_sum/num :  19.86939 
+# p_value_method_2_sum/num          0.368492
+# Hausman_stat_method_2_sum/num     1.249217
 
 
-## WITH n = 1000: (EN AUGMENTANT number_clusters à 100 !!!!) #####################################
-
-# Case 1 : NO correlation Corr(c_i,x_it) = 0 (Respect of RE.1.b)  
-# p_value_method_1_sum/num : 0.4735966
-# Hausman_stat_method_1_sum/num :  1.127013 
-
-# Case 2 :  correlation Corr(c_i,x_it) != 0 (Failure of RE.1.b) 
-
-# p_value_method_1_sum/num : 5.008504e-11
-# Hausman_stat_method_1_sum/num :  94.89613  
 
 
 
