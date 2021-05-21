@@ -153,3 +153,4 @@ Method_2 <- function (y_it,x_it,data, B) {
 
 
 
+
