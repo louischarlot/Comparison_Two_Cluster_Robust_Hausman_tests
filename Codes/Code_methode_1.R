@@ -80,14 +80,6 @@ Method_1 <- function (y_it,x_it,w_i,data, vcov_chosen, NUMBER_MEAN_VARIABLES) {
 
 
 
-# chisq = 12.495, df = 3, p-value = 0.005867
-
-# chisq = 12.495, df = 3, p-value = 0.005867
-
-
-
-
-
 
 
 
