@@ -104,3 +104,4 @@ Method_1 <- function (y_it,x_it,w_i,data, vcov_chosen, NUMBER_MEAN_VARIABLES) {
 
 
 
+
