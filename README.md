@@ -3,12 +3,12 @@
 Final project by Louis CHARLOT, Chloé MAS and Rachel PAYA for the class "Econometric Methods" 
 (Paris School of Economics, professor P. Ketz).
 
-The pdf version of the "article" is available in the main directory as "Econometric_Methods_Final_Project.pdf"
+The pdf version of the project is available in the main directory as "Econometric_Methods_Final_Project.pdf"
 
 The R code is available in the "Code" directory.
 
 
-This article uses a Monte Carlo experiment to compare two types of cluster-robust Hausman
+This project uses a Monte Carlo experiment to compare two types of cluster-robust Hausman
 test: one based on the auxiliary regression method following Wooldridge (2010) and the
 other relying on the pairs cluster bootstrap procedure for the variance detailed in Cameron
 and Miller (2015). Our findings indicate that the first type of cluster-robust Hausman test
