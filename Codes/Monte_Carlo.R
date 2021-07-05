@@ -6,6 +6,8 @@
 # We realize these 2 tests with CORRELATION = "NO"  or "YES", which means NO correlation Corr(c_i,x_it) != 0 (Respect of Assumption RE.1.b of Wooldridge (2010)) 
 # or correlation Corr(c_i,x_it) = 0 (Failure of RE.1.b).
 
+# => More details available in the pdf.
+
 
 
 
