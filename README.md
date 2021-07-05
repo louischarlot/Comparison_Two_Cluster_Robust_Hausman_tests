@@ -8,7 +8,7 @@ The R code is available in the "Code" directory.
 
 
 This article uses a Monte Carlo experiment to compare two types of cluster-robust Hausman
-test: one based on the auxiliary regression method following Woolridge (2010) and the
+test: one based on the auxiliary regression method following Wooldridge (2010) and the
 other relying on the pairs cluster bootstrap procedure for the variance detailed in Cameron
 and Miller (2015). Our findings indicate that the first type of cluster-robust Hausman test
 is better to avoid type II errors while the second is better to avoid type I errors. Since the
