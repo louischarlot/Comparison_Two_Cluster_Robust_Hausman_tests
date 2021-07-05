@@ -1,6 +1,6 @@
 # Tests To The Test: Comparing Two Cluster-Robust Hausman Tests Using Monte Carlo
 
-Econometric methods final project by Louis CHARLOT, Chloé MAS, and Rachel PAYA.
+Final project by Louis CHARLOT, Chloé MAS and Rachel PAYA for the class "Econometric Methods".
 
 The pdf version of the "article" is available in the main directory as "Econometric_Methods_Final_Project.pdf"
 
