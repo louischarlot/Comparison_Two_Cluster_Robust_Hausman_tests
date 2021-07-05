@@ -2,7 +2,9 @@
 
 Econometric methods final project by Louis CHARLOT, Chloé MAS, and Rachel PAYA.
 
-The R code is available in the "Code" file.
+The pdf is available in the main directory as 
+
+The R code is available in the "Code" directory.
 
 
 
