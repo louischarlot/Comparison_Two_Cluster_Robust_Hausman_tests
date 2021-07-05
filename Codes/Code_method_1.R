@@ -1,4 +1,4 @@
-# In this code, we write the function associated to the 1st method to calculate Cluster-Robust Hausman test
+# In this code, we write the function associated to the 1st method to calculate the Cluster-Robst Hausman test, proposed by Wooldridge (2010)
 
 # => More details available in the pdf.
 
