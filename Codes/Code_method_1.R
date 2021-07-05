@@ -1,4 +1,6 @@
+# In this code, we write the function associated to the 1st method to calculate Cluster-Robust Hausman test
 
+# => More details available in the pdf.
 
 
 ######################################################################################################
