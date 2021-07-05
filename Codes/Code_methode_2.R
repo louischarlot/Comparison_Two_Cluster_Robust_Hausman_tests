@@ -1,6 +1,6 @@
 
-# In this R code, we use the 2nde méthod to calculate the Cluster-Robst Hausman test, proposed by Miller et Cameron (2015)
-# This method is divided un many steps: 
+# In this R code, we use the 2nd méthod to calculate the Cluster-Robst Hausman test, proposed by Miller et Cameron (2015)
+# This method is divided un two steps: 
 #                         - utilization of paired cluster bootstrap to estimate V_hat in B subsamples
 #                         - Haussman test for RE vs FE  
 
@@ -41,10 +41,10 @@ Method_2 <- function (y_it,x_it,data, B) {
     
     # group the data points per cluster
     clust.group <- function(c) {
-      data0[data0$cluster==c,]             #### là ça ne fonctionne plus
+      data0[data0$cluster==c,]             
     }
     
-    clust.list <- lapply(c,clust.group)  #### et du coup là non plus
+    clust.list <- lapply(c,clust.group)  
     
     # resample clusters with replacement
     c.sample <- sample(c, replace=T)  
