@@ -2,6 +2,6 @@ Monte_Carlo.R is the main code, which calls the two other codes (Code_method_1.R
 
 - Code_method_1.R defines the function associated to the 1st method to calculate the Cluster-Robst Hausman test, proposed by Wooldridge (2010).
 
-- Code_method_2.R
+- Code_method_2.R defines the function associated to the 2nd method to calculate the Cluster-Robst Hausman test, proposed by Miller et Cameron (2015)
 
-- Monte_Carlo.R
+- Monte_Carlo.R carries out the Monte Carlo comparison of the 2 methods for 2 different DGPs.
