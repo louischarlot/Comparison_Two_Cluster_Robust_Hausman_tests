@@ -1,1 +1,7 @@
-Monte_Carlo.R is the main code, which calls the two other codes (Method_1.R and Method_2.R).
+Monte_Carlo.R is the main code, which calls the two other codes (Code_method_1.R and Code_method_2.R).
+
+- Code_method_1.R 
+
+- Code_method_2.R
+
+- Monte_Carlo.R
