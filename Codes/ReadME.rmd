@@ -8,3 +8,6 @@ Monte_Carlo.R is the main code, which calls the two other codes (Code_method_1.R
 
 
 => More details are available on the pdf file of the project.
+
+
+
