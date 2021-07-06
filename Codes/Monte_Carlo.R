@@ -38,8 +38,8 @@ library(purrr)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 # Load the 2 METHODS
-source("Code_methode_1.R")
-source("Code_methode_2.R")
+source("Code_method_1.R")
+source("Code_method_2.R")
 
 
 set.seed(1) 		    # Set seed for random number generator
