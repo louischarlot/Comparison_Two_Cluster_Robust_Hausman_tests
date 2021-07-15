@@ -10,7 +10,7 @@ The R code is available in the "Code" directory.
 
 This project uses a Monte Carlo experiment to compare two types of cluster-robust Hausman
 test: one based on the auxiliary regression method following Wooldridge (2010) and the
-other relying on the pairs cluster bootstrap procedure for the variance detailed in Cameron
+other one relying on the pairs cluster bootstrap procedure for the variance detailed in Cameron
 and Miller (2015).
 
 
